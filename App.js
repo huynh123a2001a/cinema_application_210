@@ -15,6 +15,7 @@ import FilmsContentView from './src/Screens/FilmsContentScreen';
 import ShowTimesView from './src/Screens/ShowTimesScreen';
 import BranchView from './src/Screens/Branch';
 import BillView from './src/Screens/BillScreen';
+import routes from './src/Route/db';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
