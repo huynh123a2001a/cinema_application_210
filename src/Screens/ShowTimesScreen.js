@@ -1,197 +1,157 @@
-import { StyleSheet, Text, View,TouchableOpacity, Image,ScrollView, Table, Row} from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity, Image,ScrollView, Table, ActivityIndicator} from 'react-native';
 import {React} from 'react-native';
 import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
-import { DataTable } from 'react-native-paper';
+import { useState,useEffect } from 'react';
+import localhost from '../Route/configIP'
 export default function ShowTimesView ({navigation, route})
 {   
 
-    const showTimeData = route.params;
-    const dataTables=[
-        {
-            id:1,
-            idFilm:1,
-            idBranch:1,
-            idRoom:1,
-            showTime:"11:30",
-
-        },
-        {
-            id:2,
-            idFilm:1,
-            idRoom:1,
-            idBranch:1,
-            showTime:"12:30",
-
-        },
-        {
-            id:3,
-            idFilm:1,
-            idRoom:1,
-            idBranch:2,
-            showTime:"13:30",
-
-        },
-        {
-            id:4,
-            idFilm:1,
-            idRoom:2,
-            idBranch:1,
-            showTime:"14:30",
-
-        },
-        {
-            id:5,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"15:30",
-
-        },
-        {
-            id:6,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"16:30",
-        },
-        {
-            id:7,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"15:30",
-
-        },
-        {
-            id:8,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"16:30",
-        },
-        {
-            id:9,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"15:30",
-
-        },
-        {
-            id:10,
-            idFilm:2,
-            idRoom:2,
-            idBranch:2,
-            showTime:"16:30",
-        }
-    ]
-    const getChair = (id,number) =>
-    {   
-        showTimeData.showTimeId=id;
-        showTimeData.showTime=number;
-        console.log("ShowtimeID: "+ showTimeData.showTimeId);
-        return navigation.navigate("Tickets",showTimeData);
+    const routeData = route.params;
+    const [isLoading, setLoading] = useState(true);
+    const [showTimesData, setShowTimesData] = useState([]);
+    const getTimes =([]);
+    const [row,setRow] = useState(3);
+    const getShowTimes = async () => {
+        try {
+            fetch(localhost()+"/showtimes", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cinemaID: routeData.cinemaID,
+                    filmID: routeData.filmID,
+                })
+                }).then((response) => response.json())
+                .then((responseData) => {
+                    setShowTimesData(responseData);
+                })
+                .then()
+       } catch (error) {
+         console.error(error);
+       } finally {
+            setLoading(false);
+       }
+     }
+     useEffect(() => {
+        getShowTimes();
+     }, []);
+    function setTime(value)
+     {
+        for (let j=0;j<getTimes.length;j++)
+            {
+                if(value.slice(0,value.indexOf("T"))==getTimes[j])
+                    return;
+            }
+        return getTimes.push(value.slice(0,value.indexOf("T")));
+     }
+    const getTime = (showTimesData) =>
+    {
+        showTimesData.map(data=>setTime(data.showTime))
     }
-    const getCardFilm=(branchId)=>{
-        const getDataTables = dataTables.filter(data => data.idBranch==branchId)
-        if (getDataTables.length==0)
+
+    const getCardFilm=(value)=>{
         return(
-            <View style={{justifyContent:'center',alignItems:'center', width:"100%",height:"100%"}}>
-                <Text style={{fontWeight:'bold', fontSize:20}}>Địa chỉ hiện tại không có lịch chiếu</Text>
-            </View>
-        )
-        return(
+            
             <View style={{width:"100%", height:"100%",}}>
-            <View style={styles.showTimesCard}>
-            <LinearGradient style={styles.showTimesCinema} colors={['#8B6914','#B8860B','#CD950C','#DAA520','#CDAD00','#FFFF00']}
-                start={{ x: 0, y: 0 }}
-                end={{x: 1, y:1}}>
-                    <Text style={styles.textShowTimesCinema}>Cinema 210: {"Bình Thạnh"}</Text>
-                </LinearGradient>
-                <View style={styles.showTimes}>
-                    <View style={styles.showTimesTitle}>
-                        <Text style={styles.textShowTimesTitle}> 2D Phụ đề</Text>
-                    </View>
-                    <View style={styles.showTimesContent}>
-                        <ScrollView>
-                            {getTableShowTimes(getDataTables)}
-                        </ScrollView>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.showTimesCard}>
-            <LinearGradient style={styles.showTimesCinema} colors={['#8B6914','#B8860B','#CD950C','#DAA520','#CDAD00','#FFFF00']}
-                start={{ x: 0, y: 0 }}
-                end={{x: 1, y:1}}>
-                    <Text style={styles.textShowTimesCinema}>Cinema 210: {"Bình Thạnh"}</Text>
-                </LinearGradient>
-                <View style={styles.showTimes}>
-                    <View style={styles.showTimesTitle}>
-                        <Text style={styles.textShowTimesTitle}> 2D Lồng tiếng</Text>
-                    </View>
-                    <View style={styles.showTimesContent}>
-                        <ScrollView>
-                            {getTableShowTimes(getDataTables)}
-                        </ScrollView>
+                {value.map( item =>
+                <View style={styles.showTimesCard} key ={item}>
+                <LinearGradient style={styles.showTimesCinema} colors={['#8B6914','#B8860B','#CD950C','#DAA520','#CDAD00','#FFFF00']}
+                    start={{ x: 0, y: 0 }}
+                    end={{x: 1, y:1}}>
+                        <Text style={styles.textShowTimesCinema}>{routeData.cinemaName}</Text>
+                    </LinearGradient>
+                    <View style={styles.showTimes}>
+                        <View style={styles.showTimesTitle}>
+                            <Text style={styles.textShowTimesTitle}> {item}</Text>
+                        </View>
+                        <View style={styles.showTimesContent}>
+                            <ScrollView>
+                                {getTableShowTimes(item)}
+                            </ScrollView>
+                        </View>
                     </View>
                 </View>
-            </View>
+                )}
             </View>
         )
     }
-    const getColumnShowTimes = (number,id) =>
+        
+    const getChair = (id,number,roomID,roomName) =>
+    {
+        routeData.scheduleID=id;
+        routeData.showTime=number.slice(number.indexOf("T")+1,number.indexOf("Z")-7);
+        routeData.showDate=number.slice(0,number.indexOf("T"))
+        routeData.roomID=roomID;
+        routeData.roomName=roomName;
+        console.log("ShowtimeID: "+ routeData.scheduleID);
+        return navigation.navigate("Tickets",routeData);
+    }
+
+    const getColumnShowTimes = (number,id,roomID,roomName) =>
     {
         return(
-                <TouchableOpacity key={id} onPress={()=>getChair(id,number)} >
+                <TouchableOpacity key={id} onPress={()=>getChair(id,number,roomID,roomName)} >
                     <View style={styles.buttonShowTimes}>
                         <Text style={styles.textContentShowTimes}>
-                            {number}:{id}
+                            {number.slice(number.indexOf("T")+1,number.indexOf("Z")-7)}
                         </Text>
                     </View>
                 </TouchableOpacity>
         );
     }
-    const getTableShowTimes = (getDataTables)=>
-    {
+    const getTableShowTimes = (day)=>
+    {   
+        const tableShowData =([])
+        showTimesData.map(value => 
+            {if(value.showTime.slice(0,value.showTime.indexOf("T"))==day) return tableShowData.push(value)}
+        )
         const getTable = [];
         var getColumns =[];
         let keycolumn=0;
         
-        for (let i =0; i<getDataTables.length;i++)
+        for (let i =0; i<tableShowData.length;i++)
         {
             if(i!=0 && i%3==0)
             {
                 getTable.push(getColumns);
                 getColumns=[];
             }
-            getColumns.push({name:getDataTables[i].showTime, id:getDataTables[i].id})
-            if(i==getDataTables.length-1 && getColumns.length > 0)
+            getColumns.push({showTime:tableShowData[i].showTime, showTimeID:tableShowData[i].scheduleID, roomID:tableShowData[i].roomID, roomName:tableShowData[i].roomName})
+            if(i==tableShowData.length-1 && getColumns.length > 0)
             {
                 getTable.push(getColumns);
             }
         }
+
         return(
             getTable.map((index) =>
                 <View style={styles.boxContent} key= {keycolumn++}>
                     {
                     index.map((item) =>
-                        <Text key={item.id}>{getColumnShowTimes(item.name,item.id)}</Text>
+                        <Text key={item.scheduleID}>{getColumnShowTimes(item.showTime,item.showTimeID,item.roomID,item.roomName)}</Text>
                     )
                     }
                 </View>
             )
         );
     }
-    
     return(
         <LinearGradient style={styles.filmContentIndex} colors={['#000066','#3300FF','#0099FF','#0099FF','#33CCFF', '#0099FF','#0099FF','#3300FF', '#000066']}
         start={{ x: 0.1, y: 0 }}
         end={{x: 0.7, y:1}}>
+            {getTime(showTimesData)}
+            { isLoading? 
+            <View style={{ width: '100%', height: '100%', alignItems:'center', justifyContent:'center'}}>
+                <ActivityIndicator/>
+            </View>
+            :
             <ScrollView>
-                {getCardFilm(showTimeData.branchId)}
+                {getCardFilm(getTimes)}
             </ScrollView>
+            }
         </LinearGradient>
     );
 }

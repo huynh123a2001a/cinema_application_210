@@ -1,54 +1,44 @@
-import { StyleSheet, Text, View,TouchableOpacity, ScrollView} from 'react-native';
+import {Image, Text, View,TouchableOpacity, ScrollView} from 'react-native';
 import {React} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
+import { useState,useEffect } from 'react';
+import localhost from '../Route/configIP'
 export default function BranchView({navigation, route})
 {
-    const branchData = route.params;
-    const  branchs = [
-        {
-            id:1,
-            brachName:"Bình thạnh",
-        },
-        {
-            id:2,
-            brachName:"Sóc trăng",
-        },
-        {
-            id:3,
-            brachName:"Đà nẵng",
-        },
-        {
-            id:4,
-            brachName:"Quảng Nam",
-        },
-        {
-            id:5,
-            brachName:"Hà Nội",
-        },
-        {
-            id:6,
-            brachName:"Hoàng Sa",
-        },
-        {
-            id:7,
-            brachName:"Trường Sa",
-        },
-    ]
-    function onShowTimeScreen(id,name)
+    const routeData = route.params;
+    const [isLoading, setLoading] = useState(true);
+    const [branchsData, setBranchsData] = useState([]);
+    const getBranchs = async () => {
+        try {
+         const response = await fetch(localhost()+"/branchs/"+routeData.filmID+"");
+         const json = await response.json();
+         setBranchsData(json);
+       } catch (error) {
+         console.error(error);
+       } finally {
+         setLoading(false);
+       }
+     }
+     useEffect(() => {
+        getBranchs();
+     }, []);
+    
+    function onShowTimeScreen(id,name,addressID, addressName)
     {
-        branchData.branchId=id;
-        branchData.branchName=name;
-        console.log("ID Branch: "+branchData.branchId);
-        return navigation.navigate("Lịch chiếu",branchData);
+        routeData.cinemaID=id;
+        routeData.cinemaName=name;
+        routeData.addressID=addressID;
+        routeData.addressName=addressName;
+        return navigation.navigate("Lịch chiếu", routeData);
     }
-    function showBranch()
+    function showBranch(branchsData)
     {
         return(
-        branchs.map((datashow)=>
-            <TouchableOpacity key={datashow.id} style={[styles.showTimesCard,{height: 100}]} onPress={() => onShowTimeScreen(datashow.id,datashow.brachName)}>
+        branchsData.map((datashow)=>
+            <TouchableOpacity key={datashow.cinemaID} style={[styles.showTimesCard,{height: 100}]} onPress={() => onShowTimeScreen(datashow.cinemaID,datashow.cinemaName,datashow.addressID,datashow.addressName)}>
                <View style={styles.branchName}>
-                    <Text style={styles.textBranchName}>Cinema: {datashow.brachName}</Text>
+                    <Text style={styles.textBranchName}>{datashow.cinemaName}</Text>
                </View>
             </TouchableOpacity>
         )
@@ -59,7 +49,12 @@ export default function BranchView({navigation, route})
         start={{ x: 0.1, y: 0 }}
         end={{x: 0.7, y:1}}>
             <ScrollView>
-                {showBranch(branchs)}
+                {isLoading? 
+                <View style={{alignItems:'center',marginTop:'10%'}}>
+                <Image source={require('../images/iconLoading.gif')} style={{ maxWidth:'20%',maxHeight:'20%', display:'block'}}></Image>
+                <Text style={{marginTop:'5%', fontSize:20,fontWeight:'bold'}}> Loading...</Text>
+                </View>
+                : showBranch(branchsData)}
             </ScrollView>
         </LinearGradient>
     );

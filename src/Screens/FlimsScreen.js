@@ -1,70 +1,60 @@
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Input, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Animated, ActivityIndicator, ScrollView, Image } from 'react-native';
 import {React} from 'react-native';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from 'react-native-paper';
+import handleApp from '../Handle/setHandleApp.json'
+import localhost from '../Route/configIP'
 export default function FilmsView({navigation})
-{   
-    const  filmsContent = [
-        {
-            id:1,
-            nameFilm: "AVATAR 2",
-            releaseDate:"12/12/2022",
-            status:1,
-            runTime:163,
-            rate:3.2,
-            image:"https://ss-images.saostar.vn/w800/2020/05/29/7555433/z.jpg",
-            content:"Đây là thông tin phim 1",
-            branchId:null,
-        },
-        {
-            id:2,
-            nameFilm: "AVATAR 3",
-            releaseDate:"12/12/2021",
-            status:1,
-            runTime:123,
-            rate:4.2,
-            image:"https://ss-images.saostar.vn/w800/2020/05/29/7555433/z.jpg",
-            content:"Đây là thông tin phim 2",
-            branchId:null,
-        },
-    ]
+{   const [isLoading, setLoading] = useState(true);
+    const [filmsData, setFilmsData] = useState([]);
+    const getFilms = async () => {
+        try {
+         const response = await fetch(localhost()+"/films");
+         const json = await response.json();
+         setFilmsData(json);
+       } catch (error) {
+         console.error(error);
+       } finally {
+         setLoading(false);
+       }
+     }
+     useEffect(() => {
+        getFilms();
+     }, []);
     const showFilmsContent = (data) =>{
-        return navigation.navigate("Thông tin phim",data);
+
+        navigation.navigate("Thông tin phim",data)
     }
     const getFilmsData = () =>{
 
         return(
 
-        filmsContent.map((data)=>(
-        <TouchableOpacity style={styles.filmsCard} key={data.id} onPress={()=>showFilmsContent(data)}>
+        filmsData.map((data)=>(
+        <TouchableOpacity style={styles.filmsCard} key={data.filmID} onPress={()=>showFilmsContent(data)}>
         <Image style={styles.topFilmsCard} source={{
-            uri: (data.image)}}>
+            uri: (data.image.trim())}}>
         </Image>
         <View style={styles.bottomFilmsCard}>
             <View style={styles.itemBottomCard}>
-                <View style={styles.titleTextCard}>
-                    <ScrollView>
-                        <Text style={styles.titleText}>{data.nameFilm}</Text>
-                    </ScrollView>
+                <View style={[styles.titleTextCard,{position:"relative",}]}>
+                    <Text style={{fontWeight:'bold', fontSize:16}}>{handleApp.isLanguage?data.filmName1:data.filmName}</Text>
                 </View>
                 <Text style={styles.titleContentText}>
-                    Ngày khởi chiếu: 
-                    <Text style={styles.contentTextCard}> {data.releaseDate}</Text>    
+                    {handleApp.isLanguage?"Realse date: ":"Ngày khởi chiếu: "}
+                    <Text style={styles.contentTextCard}> {data.releaseDate.substring(0,10)}</Text>    
                 </Text>
                 <Text style={styles.titleContentText}>
-                    Trạng thái: 
-                    <Text style={styles.contentTextCard}>{data.status == 1?"Đang chiếu":"Sắp chiếu"}</Text>    
+                    {handleApp.isLanguage?"Status: ":"Trạng thái: "}
+                    <Text style={styles.contentTextCard}>{handleApp.isLanguage?data.status == 1?"Playing":"Up coming": data.status == 1?"Đang chiếu":"Sắp chiếu"}</Text>    
                 </Text>
                 <Text style={styles.titleContentText}>
-                    Thời lượng: 
-                    <Text style={styles.contentTextCard}> {data.runTime}</Text>    
+                    {handleApp.isLanguage?"Run time: ":"Thời lượng: "}
+                    <Text style={styles.contentTextCard}> {data.runtime}</Text>    
                 </Text>
                 <Text style={styles.titleContentText}>
-                    Đánh giá: 
-                    <Text style={styles.contentTextCard}> {data.rate}/5</Text>    
+                    {handleApp.isLanguage?"Rate":"Đánh giá"}
+                    <Text style={styles.contentTextCard}> {handleApp.isLanguage? data.rated?data.rated+"/5":"There are no reviews yet":data.rated?data.rated+"/5":"Chưa có đánh giá"}</Text>    
                 </Text>
             </View>
             <View style={styles.otherContent}>
@@ -82,9 +72,15 @@ export default function FilmsView({navigation})
         end={{x: 0.7, y:1}} style={styles.linearBackground}>
       <ScrollView>
         <View style={styles.indexStyle}>
-            {getFilmsData()}
+        {isLoading ? <View style={{alignItems:'center',marginTop:'10%'}}>
+        <Image source={require('../images/iconLoading.gif')} style={{ maxWidth:'20%',maxHeight:'20%', display:'block'}}></Image>
+        <Text style={{marginTop:'5%', fontSize:20,fontWeight:'bold'}}> Loading...</Text>
+        </View> : (
+            getFilmsData()
+        )}
         </View>
         </ScrollView>
       </LinearGradient>
     );
 }
+//

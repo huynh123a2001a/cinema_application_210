@@ -176,11 +176,11 @@ export default styles = StyleSheet.create({
         fontSize:10,
     },
     titleTextCard:{
-        top:10,
         width:'100%',
         height:'30%',
         fontWeight:'bold',
         alignItems:'center',
+
     },
     titleText:{
         fontWeight:'bold',
@@ -252,7 +252,6 @@ export default styles = StyleSheet.create({
     filmContentTitle:{
         flex:1,
         alignItems:'center',
-        marginTop:'2%',
         borderBottomWidth:0.5,
         height:'auto'
     },
@@ -386,8 +385,7 @@ export default styles = StyleSheet.create({
         maxWidth:'100%',
         maxHeight:'100%',
         width:1300,
-        height:1300,
-        justifyContent:'center',
+        height:400,
         top:'20%',
     },
     buttonChooseChair:{

@@ -6,15 +6,7 @@ export default function UserView(){
   const [data, setData] = useState([]);
 
   const getMovies = async () => {
-     try {
-      const response = await fetch("https://api.swaggerhub.com/apis/swagger-hub/registry-api?_ga=2.212986071.2103391178.1665818758-691591535.1664896233");
-      var data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    fe
   }
 
   useEffect(() => {

@@ -2,26 +2,66 @@ import { StyleSheet, Text, View,TouchableOpacity, TouchableHighlight, Image,Scro
 import {React} from 'react-native';
 import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import localhost from '../Route/configIP'
+import getChairTable from '../Handle/getChairs'
 export default function TicketsView({navigation, route})
 {   
-  var chairData= [];
-  const [chairStatus, setChairStatus] = useState([{
-    id,
-    name:null,
-  }]);
-  const arrayString = ["","A","B","C","D","E"];
-  const arrayNumber = [1,2,3,4,5,6,7,9];
-  const hidden =["1A","1C","3E","1E","1G","2B","2D","2F","2H","3A","3C","3G","4B","4D","4F","4H"];
+  /*=================================================*/
+  const getChairs = async () => {
+    try {
+        fetch(localhost()+"/chairs", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                 roomID: ticketsData.roomID,
+            })
+            }).then((response) => response.json())
+            .then((responseData) => {
+              setChairsData(responseData);
+            })
+            .then()
+   } catch (error) {
+     console.error(error);
+   } finally {
+    setLoading(false);
+   }
+  }
+  useEffect(() => {
+    getChairs();
+  }, []);
+ /*=================================================*/
+ function getHidden(data)
+ {
+  chairsData.map(hiddenValue =>
+    {
+      if(hiddenValue.status==0)
+        return data.push(hiddenValue.chairName.trim());
+    }
+  )
+ } 
+ /*=================================================*/
+  const arrayString = ([""]);
+  const arrayNumber = ([]);
+  const hidden =[];
+  const [isLoading, setLoading] = useState(true);
+  const [chairsData, setChairsData] = useState([]);
+  var chairs =([]);
   let xstatus = useState([]);
   const [statusC,setStatusC] = useState(0);
   const ticketsData = route.params;
+  getChairTable(arrayString,arrayNumber,chairsData);
+  getHidden(hidden);
+  /*=================================================*/
   function arrayRemove(arr, value) {
     return arr.filter(function(ele){
         return ele != value;
     });
   }
+  /*=================================================*/
   function arrayFind(arr, value)
   {
     return arr.find(function(findvalue){
@@ -31,25 +71,28 @@ export default function TicketsView({navigation, route})
       }
     })
   }
-  const onBill = (chairData) =>{
-    ticketsData.chair=chairData;
+  /*=================================================*/
+  const onBill = (chairs) =>{
+    ticketsData.chairs=chairs;
     navigation.navigate("Thanh toán",ticketsData);
   }
+  /*=================================================*/
   const setChair = (value) =>
     {
       xstatus=0;
-      chairData.filter((values) => {
+      chairs.filter((values) => {
         if(values==value)
           {
-            chairData = arrayRemove(chairData, value);
+            chairs = arrayRemove(chairs, value);
             xstatus=1;
           }
       })
       if(xstatus==0){
-      chairData.push(value);
+        chairs.push(value);
       }
-      console.log();
+      console.log(chairs)
     }
+    /*=================================================*/
   function createArrayChair(number, numberz)
   {
     
@@ -75,11 +118,11 @@ export default function TicketsView({navigation, route})
       </TouchableOpacity>
     );
   }
+  /*=================================================*/
     return(
         <LinearGradient colors={['#000077','#000088','#0000DD','#0000AA','#0000BB', '#0000AA','#0000DD','#000088', '#000077']}
         start={{ x: 0.1, y: 0 }}
         end={{x: 0.7, y:1}} style={styles.linearBackground}>
-          
         <View style={{width:'100%',height:100, alignItems:'center', justifyContent:'center',borderBottomWidth:2}}>
           <Image source={require('../images/ScreenShow.png')} style={{maxWidth:'100%', maxHeight:120}} />
         </View>
@@ -110,7 +153,7 @@ export default function TicketsView({navigation, route})
         </View>
         </ScrollView>
         <View style={{width:"100%", height:55, backgroundColor:"orange", borderWidth:1, alignItems:'center',justifyContent:'center'}}>
-          <TouchableOpacity style={{width:250,height:30, backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onBill(chairData)}>
+          <TouchableOpacity style={{width:250,height:30, backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onBill(chairs)}>
             <Text>
               Thông tin thanh toán: {statusC}
             </Text>

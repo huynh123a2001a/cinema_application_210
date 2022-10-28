@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground, Image } from 'react-native';
+import {View, Text, DevSettings, ImageBackground, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import handleApp from '../Handle/setHandleApp.json';
 import styles from '../Css/drawerCss'
 import {
     Avatar,
@@ -28,6 +29,7 @@ export function DrawerContent(props)
     const languageTheme = () =>
     {
       setIsLanguage(!isLanguage);
+      handleApp.isLanguage = !handleApp.isLanguage;
     }
     function onIndex()
     {
@@ -112,7 +114,7 @@ export function DrawerContent(props)
                   <View style={styles.preference}>
                     <Text style={{fontWeight:'bold', color:'black'}} >Tiếng việt ⇄ Engligh</Text>
                     <View pointerEvents="none">
-                      <Switch value={isLanguage}/>
+                      <Switch value={handleApp.isLanguage}/>
                     </View>
                   </View>
                 </TouchableRipple>
