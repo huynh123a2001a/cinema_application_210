@@ -4,7 +4,8 @@ import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 import localhost from '../Route/configIP'
-import getChairTable from '../Handle/getChairs'
+import getChairTable from '../Handle/getChairs';
+import handleApp from '../Handle/setHandleApp.json';
 export default function TicketsView({navigation, route})
 {   
   /*=================================================*/
@@ -74,7 +75,10 @@ export default function TicketsView({navigation, route})
   /*=================================================*/
   const onFoodCombos = (chairs) =>{
     ticketsData.chairs=chairs;
-    navigation.navigate("Phụ phẩm",ticketsData);
+    handleApp.isLanguage==false?
+    navigation.navigate("Phụ phẩm",ticketsData)
+    :
+    navigation.navigate("By-products",ticketsData);
   }
   /*=================================================*/
   const setChair = (value) =>
@@ -155,7 +159,7 @@ export default function TicketsView({navigation, route})
         <View style={{width:"100%", height:55, backgroundColor:"orange", borderWidth:1, alignItems:'center',justifyContent:'center'}}>
           <TouchableOpacity style={{width:"30%",height:"70%", backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onFoodCombos(chairs)}>
             <Text>
-              Tiếp tục
+              {handleApp.isLanguage==false?"Tiếp tục":"Continue"}
             </Text>
           </TouchableOpacity>
         </View>

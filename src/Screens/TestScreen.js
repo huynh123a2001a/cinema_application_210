@@ -1,63 +1,41 @@
-import { ActivityIndicator, Text, View,TouchableOpacity, ScrollView} from 'react-native';
+import { ActivityIndicator, Text, View,TouchableOpacity, RefreshControl} from 'react-native';
 import {React} from 'react-native';
 import styles from '../Css/pageCss';
 import fetchlocal from '../Route/configIP'
-import { LinearGradient } from 'expo-linear-gradient';
-import { useState, useEffect } from 'react';
-export default function TestView()
+import handleApp from '../Handle/setHandleApp.json'
+import { useState, useEffect, useCallback } from 'react';
+export default function TestView({navigator})
 { 
-  let count= useState(0);
-  const items = ([{
-    itemID:1,
-    item1:1,
-  },{
-    itemID:2,
-    item1:1,
-  },{
-    itemID:3,
-    item1:1,
-  },{
-    itemID:4,
-    item1:1,
-  }])
-  function changeitem1(itemID)
-  {
-    items.map((item)=>item.itemID == itemID?item.item1++:0)
-    let a=3;
-    items.map()
-    console.log(a)
-    
+  const wait = (timeout) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
   }
-  function changeitem2(itemID)
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+  function refreshControl()
   {
-    items.map((item)=>item.itemID == itemID?item.item1++:0)
-    console.log(count)
+    try{
+      onRefresh(onRefresh)
+      setRefreshing(!refreshing)
+    }
+    catch (e)
+    {
+      console.log(e)
+    }
   }
-  function changeitem3(itemID)
-  {
-    items.map((item)=>item.itemID == itemID?item.item1++:0)
-    console.log(count)
-  }
-  function changeitem4(itemID)
-  {
-    items.map((item)=>item.itemID == itemID?item.item1++:0)
-    console.log(count)
-  }
-  return (
-  <View>
-      <TouchableOpacity style={{width:100, height:100, backgroundColor:'red', margin:20}} onPress={()=>changeitem3(1)}>
-
+  return(
+    <View style={styles.container}>
+      <TouchableOpacity style={{width:200, height:100, backgroundColor:'red', borderRadius:15,borderWidth:1, alignItems:'center',justifyContent:'center'}}
+      onPress={() => refreshControl()}
+      >
+        <Text style={{color:'white', fontWeight:'bold'}}>onClick Call function: {refreshing.toString()}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{width:100, height:100, backgroundColor:'red', margin:20}} onPress={()=>changeitem3(2)}>
-
-      </TouchableOpacity>
-      <TouchableOpacity style={{width:100, height:100, backgroundColor:'red', margin:20}} onPress={()=>changeitem3(3)}>
-
-      </TouchableOpacity>
-      <TouchableOpacity style={{width:100, height:100, backgroundColor:'red', margin:20}} onPress={()=>changeitem3(4)}>
-
-      </TouchableOpacity>
-      
-  </View>    
+    </View>
   )
 }

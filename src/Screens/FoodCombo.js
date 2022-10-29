@@ -4,7 +4,8 @@ import { useState,useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
 import localhost from '../Route/configIP'
-import NumericInput from 'react-native-numeric-input'
+import NumericInput from 'react-native-numeric-input';
+import handleApp from '../Handle/setHandleApp.json';
 export default function FoodsView({navigation,route})
 {
     const routeData = route.params;
@@ -29,19 +30,19 @@ export default function FoodsView({navigation,route})
      useEffect(() => {
         getFoods();
      }, []);
-    const onChangeCombo = (itemID, itemName, itemQuality, itemPrice) =>
+    const onChangeCombo = (itemID, itemName, itemquantity, itemPrice) =>
     {
         try {
-            itemsFood.map(item => {if(item.comboID==itemID){item.quality=itemQuality,item.comboName=itemName}})
+            itemsFood.map(item => {if(item.comboID==itemID){item.quantity=itemquantity,item.comboName=itemName}})
         }
         catch(err){
             console.log(err)
         }
     }
-    const onChangeFood = (itemID, itemName, itemQuality, itemPrice) =>
+    const onChangeFood = (itemID, itemName, itemquantity, itemPrice) =>
     {
         try {
-            itemsFood.map(item => {if(item.foodID==itemID){item.quality=itemQuality;item.foodName=itemName}})
+            itemsFood.map(item => {if(item.foodID==itemID){item.quantity=itemquantity;item.foodName=itemName}})
          }
          catch(err){
              console.log(err)
@@ -51,15 +52,18 @@ export default function FoodsView({navigation,route})
     {
         const data = itemsFood.filter(function(item)
         {
-            return item.quality>0
+            return item.quantity>0
         })
         routeData.foods = data;
-        return navigation.navigate("Thanh toán", routeData)
+        handleApp.isLanguage==false?
+            navigation.navigate("Thanh toán", routeData)
+            :
+            navigation.navigate("Payment", routeData)
     }
     const getCardFoods = (item) =>
     {
         try {
-        itemsFood.push(item.foodID?{foodID:item.foodID,foodName:item.foodName, foodPrice:item.foodPrice, quality:0}:{comboID:item.comboID,comboName:item.comboName, comboPrice:item.comboPrice, quality:0})
+        itemsFood.push(item.foodID?{foodID:item.foodID,foodName:item.foodName, foodPrice:item.foodPrice, quantity:0}:{comboID:item.comboID,comboName:item.comboName, comboPrice:item.comboPrice, quantity:0})
         return(
             <View style={{flex:1, maxWidth:'44%', height:280, marginLeft:"3%", marginRight:'3%', borderRadius:15,backgroundColor:'orange', opacity:0.87, borderWidth:1}}>
                     <View style={{flex:2.5, borderBottomWidth:0.5}}>
@@ -72,7 +76,7 @@ export default function FoodsView({navigation,route})
                             <Text style={styles.contentText}>{item.foodName?item.foodName:item.comboName}</Text>
                         </View>
                         <View style={{flex:0.5,backroundColor:'red', alignItems:'center'}}>
-                            <Text style={styles.titleContentText}>Giá: {item.foodPrice?item.foodPrice:item.comboPrice} </Text>
+                            <Text style={styles.titleContentText}>{handleApp==false?"Giá:":"Price:"} {item.foodPrice?item.foodPrice:item.comboPrice} </Text>
                         </View>
                         <View style={{flex:1,backroundColor:'red', alignItems:'center', marginTop:'2%'}}>
                         <NumericInput onChange={value => item.foodID?onChangeFood(item.foodID,item.foodName,value,item.foodPrice):onChangeCombo(item.comboID,item.comboName,value,item.comboPrice)}
@@ -100,20 +104,40 @@ export default function FoodsView({navigation,route})
         const foodsData=[];
         comboData.map(item => foodsData.push(item))
         foodData.map(item => foodsData.push(item))
-        for (let i =0; i<foodsData.length;i++)
-        {
-            if(i!=0 && i%2==0)
+        if(handleApp.isLanguage==false){
+            for (let i =0; i<foodsData.length;i++)
             {
-                getTable.push(getColumns);
-                getColumns=[];
+                if(i!=0 && i%2==0)
+                {
+                    getTable.push(getColumns);
+                    getColumns=[];
+                }
+                foodsData[i].comboID?
+                    getColumns.push({comboID:foodsData[i].comboID,comboName:foodsData[i].comboName,comboPrice:foodsData[i].comboPrice, imageCombo:foodsData[i].imageCombo, status:foodsData[i].status })
+                    :
+                    getColumns.push({foodID:foodsData[i].foodID, foodName:foodsData[i].foodName, foodPrice:foodsData[i].foodprice,imageFood:foodsData[i].imageFood,status:foodsData[i].status})
+                if(i==foodsData.length-1 && getColumns.length > 0)
+                {
+                    getTable.push(getColumns);
+                }
             }
-            foodsData[i].comboID?
-                getColumns.push({comboID:foodsData[i].comboID,comboName:foodsData[i].comboName,comboPrice:foodsData[i].comboPrice, imageCombo:foodsData[i].imageCombo, status:foodsData[i].status })
-                :
-                getColumns.push({foodID:foodsData[i].foodID, foodName:foodsData[i].foodName, foodPrice:foodsData[i].foodprice,imageFood:foodsData[i].imageFood,status:foodsData[i].status})
-            if(i==foodsData.length-1 && getColumns.length > 0)
+        }
+        else {
+            for (let i =0; i<foodsData.length;i++)
             {
-                getTable.push(getColumns);
+                if(i!=0 && i%2==0)
+                {
+                    getTable.push(getColumns);
+                    getColumns=[];
+                }
+                foodsData[i].comboID?
+                    getColumns.push({comboID:foodsData[i].comboID,comboName:foodsData[i].comboName1,comboPrice:foodsData[i].comboPrice, imageCombo:foodsData[i].imageCombo, status:foodsData[i].status })
+                    :
+                    getColumns.push({foodID:foodsData[i].foodID, foodName:foodsData[i].foodName1, foodPrice:foodsData[i].foodprice,imageFood:foodsData[i].imageFood,status:foodsData[i].status})
+                if(i==foodsData.length-1 && getColumns.length > 0)
+                {
+                    getTable.push(getColumns);
+                }
             }
         }
         return(
@@ -144,7 +168,10 @@ export default function FoodsView({navigation,route})
             </ScrollView>
             <View style={{width:'100%', height:'10%', backgroundColor:"blue", alignItems:'center', justifyContent:'center'}}>
                 <TouchableOpacity style={{width:120, height:40, backgroundColor:"yellow",alignItems:'center', justifyContent:'center', borderRadius:15}} onPress={() => onBill(itemsFood)}>
-                    <Text style={styles.titleText}>Thanh toán</Text>
+                    {handleApp.isLanguage==false?
+                        <Text style={styles.titleText}>Thanh toán</Text>
+                    :
+                        <Text style={styles.titleText}>Payment</Text>}
                 </TouchableOpacity>
             </View>
         </LinearGradient>

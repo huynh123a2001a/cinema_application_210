@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import IndexView from './IndexScreen';
 import NewsView from './NewsScreen';
 import FilmsView from './FlimsScreen';
-
+import handleApp from '../Handle/setHandleApp.json'
 const Tab = createBottomTabNavigator();
 export default function TabBottomView()
 {
@@ -30,14 +30,14 @@ export default function TabBottomView()
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Chính') {
+            if (route.name === 'Sự kiện' || route.name === 'Events') {
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-            } else if (route.name === 'Tin tức') {
+            } else if (route.name === 'Tin tức' || route.name === 'News') {
               iconName = focused ? 'newspaper-outline' : 'newspaper';
             }
-            else if (route.name === 'Đặt vé') {
+            else if (route.name === 'Đặt vé' || route.name === 'Booking') {
               iconName = focused ? 'barcode' : 'barcode-outline';
             }
 
@@ -49,9 +49,9 @@ export default function TabBottomView()
           headerShown: false,
         })}
       >
-        <Tab.Screen name="Đặt vé" component={FilmsView} />
-        <Tab.Screen name="Chính" component={IndexView} />
-        <Tab.Screen name="Tin tức" component={NewsView} />
+        <Tab.Screen name={handleApp.isLanguage==false?"Đặt vé":"Booking"}component={FilmsView} />
+        <Tab.Screen name={handleApp.isLanguage==false?"Sự kiện":"Events"} component={IndexView} />
+        <Tab.Screen name={handleApp.isLanguage==false?"Tin tức":"News"} component={NewsView} />
       </Tab.Navigator>
     );
 }

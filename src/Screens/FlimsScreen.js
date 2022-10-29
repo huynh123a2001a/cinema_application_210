@@ -3,11 +3,12 @@ import {React} from 'react-native';
 import { useState,useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
-import handleApp from '../Handle/setHandleApp.json'
+import handleApp from '../Handle/setHandleApp.json';
 import localhost from '../Route/configIP'
 export default function FilmsView({navigation})
 {   const [isLoading, setLoading] = useState(true);
     const [filmsData, setFilmsData] = useState([]);
+    const [language, setLanguage] = useState(handleApp.isLanguage)
     const getFilms = async () => {
         try {
          const response = await fetch(localhost()+"/films");
@@ -23,8 +24,10 @@ export default function FilmsView({navigation})
         getFilms();
      }, []);
     const showFilmsContent = (data) =>{
-
-        navigation.navigate("Thông tin phim",data)
+        handleApp.isLanguage==false?
+            navigation.navigate("Thông tin phim",data)
+            :
+            navigation.navigate("Film detail",data)
     }
     const getFilmsData = () =>{
 
@@ -59,7 +62,7 @@ export default function FilmsView({navigation})
             </View>
             <View style={styles.otherContent}>
                 <Text style={styles.otherContentText}>
-                    Nhấn vào để xem thông tin chi tiết và đặt vé
+                {handleApp.isLanguage==false?"Nhấn vào để xem chi tiết và đặt vé":"Click to view details and booking"}
                 </Text>
             </View>
         </View>

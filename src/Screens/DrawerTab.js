@@ -4,6 +4,7 @@ import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 import TabBottomView from './TabBottom';
+import handleApp from '../Handle/setHandleApp.json';
 const Drawer = createDrawerNavigator();
 export default function DrawerTab({navigation})
 {
@@ -21,7 +22,11 @@ export default function DrawerTab({navigation})
                   fontSize: 20,
                 },
               }}>
-            <Drawer.Screen name="Trang chủ" component={TabBottomView} />
+            { handleApp.isLanguage==false?
+              <Drawer.Screen name="Trang chủ" component={TabBottomView} />
+              :
+              <Drawer.Screen name="Home page" component={TabBottomView} />
+            }
         </Drawer.Navigator>
        
     );

@@ -3,7 +3,8 @@ import {React} from 'react-native';
 import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState,useEffect } from 'react';
-import localhost from '../Route/configIP'
+import localhost from '../Route/configIP';
+import handleApp from '../Handle/setHandleApp.json';
 export default function ShowTimesView ({navigation, route})
 {   
 
@@ -88,7 +89,10 @@ export default function ShowTimesView ({navigation, route})
         routeData.roomName=roomName;
         routeData.priceTicket=priceTicket;
         console.log("ShowtimeID: "+ routeData.scheduleID);
-        return navigation.navigate("Tickets",routeData);
+        handleApp.isLanguage==false?
+            navigation.navigate("Đặt vé",routeData)
+            :
+            navigation.navigate("Tickets",routeData)
     }
 
     const getColumnShowTimes = (number,id,roomID,roomName,priceTicket) =>

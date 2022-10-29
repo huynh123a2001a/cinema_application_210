@@ -34,18 +34,30 @@ export default function App() {
       }}>
         <Stack.Screen name="Login" component={LoginView} options={{headerShown: false}}/>
         <Stack.Screen name="DrawerTab" component={DrawerTab} options={{headerShown: false}}/>
-        <Stack.Screen name="Films" component={FilmsView} />
+        <Stack.Screen name="Home page" component={FilmsView} options={{headerShown: false}} />
+        <Stack.Screen name="Trang chủ" component={FilmsView} options={{headerShown: false}} />
         <Stack.Screen name="News" component={NewsView} />
+        <Stack.Screen name="Tin tức" component={NewsView} />
         <Stack.Screen name="Contacts" component={ContactView} />
+        <Stack.Screen name="Liên hệ" component={ContactView} />
+        <Stack.Screen name="Đặt vé" component={TicketsView} />
         <Stack.Screen name="Tickets" component={TicketsView} />
         <Stack.Screen name="Support" component={SupportView} />
+        <Stack.Screen name="Hỗ trợ" component={SupportView} />
         <Stack.Screen name="Vouchers" component={VouchersView} />
-        <Stack.Screen name="User" component={UserView} />
+        <Stack.Screen name="Mã giảm giá" component={VouchersView} />
+        <Stack.Screen name="Thông tin tài khoản" component={UserView} />
+        <Stack.Screen name="Profile" component={UserView} />
         <Stack.Screen name="Thông tin phim" component={FilmsContentView} />
+        <Stack.Screen name="Film detail" component={FilmsContentView} />
         <Stack.Screen name="Lịch chiếu" component={ShowTimesView} />
+        <Stack.Screen name="Schedules" component={ShowTimesView} />
         <Stack.Screen name="Chọn khu vực" component={BranchView} />
+        <Stack.Screen name="Choose branch" component={BranchView} />
         <Stack.Screen name="Thanh toán" component={BillView} />
+        <Stack.Screen name="Payment" component={BillView} />
         <Stack.Screen name="Phụ phẩm" component={FoodsView} />
+        <Stack.Screen name="By-products" component={FoodsView} />
         <Stack.Screen name="TEST VIEW" component={TestView} />
     </Stack.Navigator>
     </NavigationContainer>

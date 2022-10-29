@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, DevSettings, ImageBackground, Image } from 'react-native';
+import {View, Text, DevSettings, ImageBackground, Image, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import handleApp from '../Handle/setHandleApp.json';
 import styles from '../Css/drawerCss'
@@ -28,8 +28,12 @@ export function DrawerContent(props)
     const [isLanguage,setIsLanguage] = React.useState(false);
     const languageTheme = () =>
     {
+      try{
       setIsLanguage(!isLanguage);
       handleApp.isLanguage = !handleApp.isLanguage;
+      props.navigation.push("DrawerTab")
+      }
+      catch (e) {console.log(e);}
     }
     function onIndex()
     {

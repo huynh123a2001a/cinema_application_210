@@ -5,6 +5,7 @@ import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import YoutubeIframe from "react-native-youtube-iframe";
+import handleApp from '../Handle/setHandleApp.json';
 import localhost from '../Route/configIP';
 import { WebView } from 'react-native-webview';
 export default function FilmsContentView({navigation, route})
@@ -42,8 +43,10 @@ export default function FilmsContentView({navigation, route})
         console.log(err)
     }
     const bookTickets = (filmData) =>{
-        console.log("ID Film: "+filmData.filmID)
-        return navigation.navigate('Chọn khu vực',filmData);
+        handleApp.isLanguage==false?
+            navigation.navigate('Chọn khu vực',filmData)
+            :
+            navigation.navigate('Choose branch',filmData)
     }
     /*oeRG9A6bDdY */
     function popupTrailer()
@@ -96,7 +99,7 @@ export default function FilmsContentView({navigation, route})
             {isLoading? '' : (
             <View style={styles.filmContentTitle}>
                 <ScrollView>
-                    <Text style={styles.textContentTitle}>{route.params.filmName} </Text>
+                    <Text style={styles.textContentTitle}>{handleApp.isLanguage==false?route.params.filmName:route.params.filmName1} </Text>
                 </ScrollView>
             </View>
             )}
@@ -104,23 +107,23 @@ export default function FilmsContentView({navigation, route})
             {isLoading ? <ActivityIndicator style={{top:"10%"}}/> : (
                 <ScrollView>
                     
-                    <Text style={styles.titleContentText}>Ngày khởi chiếu:<Text style={styles.contentTextCard}>
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Ngày khởi chiếu:":"Release Date:"}<Text style={styles.contentTextCard}>
                         {" "+route.params.releaseDate.substring(0,10)}
                     </Text></Text>
-                    <Text style={styles.titleContentText}>Tình trạng:<Text style={styles.contentTextCard}>
-                        {route.params.status==1? " Đang chiếu": route.params.status==2?" Sắp chiếu":" Ngưng chiếu"}
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Tình trạng:":"Status:"}<Text style={styles.contentTextCard}>
+                        {handleApp.isLanguage==false?route.params.status==1? " Đang chiếu": route.params.status==2?" Sắp chiếu":" Ngưng chiếu":route.params.status==1? " Paying": route.params.status==2?" Up comming":" End"}
                     </Text></Text>
-                    <Text style={styles.titleContentText}>Thể loại:<Text style={styles.contentTextCard}>
-                    {filmContentData.map((index)=> " "+index.genreName.trim()+".")}
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Thể loại:":"Genre"}<Text style={styles.contentTextCard}>
+                    {filmContentData.map((index)=> handleApp.isLanguage==false?" "+index.genreName.trim()+".":" "+index.genreName1.trim()+".")}
                     </Text></Text>
-                    <Text style={styles.titleContentText}>Thời lượng:<Text style={styles.contentTextCard}>
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Thời lượng:":"Run time:"}<Text style={styles.contentTextCard}>
                         {" "+route.params.runtime}
                     </Text></Text>
-                    <Text style={styles.titleContentText}>Sản xuất: <Text style={styles.contentTextCard}>
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Sản xuất:":"Director:"} <Text style={styles.contentTextCard}>
                         {directorFilm.map((index)=> index.directorName.trim())}
                     </Text></Text>
-                    <Text style={styles.titleContentText}>Nội dung phim:<Text style={styles.contentTextCard}>
-                        {route.params.filmDescription}
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Nội dung phim:":"Film Description:"}<Text style={styles.contentTextCard}>
+                        {handleApp.isLanguage==false?route.params.filmDescription:route.params.filmDescription1}
                     </Text></Text>
                 </ScrollView>
                 )}
@@ -128,7 +131,7 @@ export default function FilmsContentView({navigation, route})
             <View style={styles.alignBookTickets}>
                 <TouchableOpacity onPress={() => bookTickets(filmData)}>
                     <View style={styles.bookTickets}>
-                        <Text style={styles.textButton}> Đặt vé ngay</Text>
+                        <Text style={styles.textButton}>{handleApp.isLanguage==false?"Đặt vé ngay":"Booking now"}</Text>
                     </View>
                 </TouchableOpacity>
             </View>

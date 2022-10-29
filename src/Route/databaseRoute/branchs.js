@@ -18,7 +18,7 @@ router.get('/',(req, res)=>
 
 router.get('/:id',(req, res)=>
 {   
-    var sql = "SELECT ad.addressID, ad.addressName, cn.cinemaID, cn.cinemaName FROM addresses AS ad, cinemas AS cn, rooms AS r, schedules AS st, films AS f WHERE st.filmID = "+req.params.id+" AND r.roomID = st.roomID AND r.cinemaID = cn.cinemaID AND ad.addressID = cn.addressID GROUP BY ad.addressID, ad.addressName, cn.cinemaID, cn.cinemaName";
+    var sql = "SELECT ad.addressID, ad.addressName, ad.addressName1, cn.cinemaID, cn.cinemaName, cn.cinemaName1 FROM addresses AS ad, cinemas AS cn, rooms AS r, schedules AS st, films AS f WHERE st.filmID = "+req.params.id+" AND r.roomID = st.roomID AND r.cinemaID = cn.cinemaID AND ad.addressID = cn.addressID GROUP BY ad.addressID, ad.addressName, cn.cinemaID, cn.cinemaName";
     connection.query(sql, function(err, results) {
       if (err) throw err;
       results!=""?

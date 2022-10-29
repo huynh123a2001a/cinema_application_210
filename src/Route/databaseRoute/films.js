@@ -11,7 +11,7 @@ films.get('/',(req,res)=>
 });
 films.get('/:id',(req, res)=>
 {   
-    var sql = "SELECT g.genreName FROM genres AS g, genredetails AS gd WHERE gd.filmID="+req.params.id+" AND gd.genreID = g.genreID"
+    var sql = "SELECT g.genreName, g.genreName1 FROM genres AS g, genredetails AS gd WHERE gd.filmID="+req.params.id+" AND gd.genreID = g.genreID"
     try{
     connection.query(sql, function(err, results) {
       if (err) throw err;
