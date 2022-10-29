@@ -15,6 +15,7 @@ import FilmsContentView from './src/Screens/FilmsContentScreen';
 import ShowTimesView from './src/Screens/ShowTimesScreen';
 import BranchView from './src/Screens/Branch';
 import BillView from './src/Screens/BillScreen';
+import FoodsView from './src/Screens/FoodCombo';
 import TestView from './src/Screens/TestScreen';
 // import routes from './src/Route/db';
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,7 @@ export default function App() {
         <Stack.Screen name="Lịch chiếu" component={ShowTimesView} />
         <Stack.Screen name="Chọn khu vực" component={BranchView} />
         <Stack.Screen name="Thanh toán" component={BillView} />
+        <Stack.Screen name="Phụ phẩm" component={FoodsView} />
         <Stack.Screen name="TEST VIEW" component={TestView} />
     </Stack.Navigator>
     </NavigationContainer>

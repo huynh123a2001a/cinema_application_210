@@ -79,21 +79,22 @@ export default function ShowTimesView ({navigation, route})
         )
     }
         
-    const getChair = (id,number,roomID,roomName) =>
+    const getChair = (id,number,roomID,roomName,priceTicket) =>
     {
         routeData.scheduleID=id;
         routeData.showTime=number.slice(number.indexOf("T")+1,number.indexOf("Z")-7);
         routeData.showDate=number.slice(0,number.indexOf("T"))
         routeData.roomID=roomID;
         routeData.roomName=roomName;
+        routeData.priceTicket=priceTicket;
         console.log("ShowtimeID: "+ routeData.scheduleID);
         return navigation.navigate("Tickets",routeData);
     }
 
-    const getColumnShowTimes = (number,id,roomID,roomName) =>
+    const getColumnShowTimes = (number,id,roomID,roomName,priceTicket) =>
     {
         return(
-                <TouchableOpacity key={id} onPress={()=>getChair(id,number,roomID,roomName)} >
+                <TouchableOpacity key={id} onPress={()=>getChair(id,number,roomID,roomName,priceTicket)} >
                     <View style={styles.buttonShowTimes}>
                         <Text style={styles.textContentShowTimes}>
                             {number.slice(number.indexOf("T")+1,number.indexOf("Z")-7)}
@@ -119,7 +120,7 @@ export default function ShowTimesView ({navigation, route})
                 getTable.push(getColumns);
                 getColumns=[];
             }
-            getColumns.push({showTime:tableShowData[i].showTime, showTimeID:tableShowData[i].scheduleID, roomID:tableShowData[i].roomID, roomName:tableShowData[i].roomName})
+            getColumns.push({showTime:tableShowData[i].showTime, showTimeID:tableShowData[i].scheduleID, roomID:tableShowData[i].roomID, roomName:tableShowData[i].roomName, priceTicket:tableShowData[i].priceTicket})
             if(i==tableShowData.length-1 && getColumns.length > 0)
             {
                 getTable.push(getColumns);
@@ -131,7 +132,7 @@ export default function ShowTimesView ({navigation, route})
                 <View style={styles.boxContent} key= {keycolumn++}>
                     {
                     index.map((item) =>
-                        <Text key={item.scheduleID}>{getColumnShowTimes(item.showTime,item.showTimeID,item.roomID,item.roomName)}</Text>
+                        <Text key={item.scheduleID}>{getColumnShowTimes(item.showTime,item.showTimeID,item.roomID,item.roomName, item.priceTicket)}</Text>
                     )
                     }
                 </View>

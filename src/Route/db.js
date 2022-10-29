@@ -4,8 +4,9 @@ const directorRoutes = require('./databaseRoute/directors.js');
 const branchs = require('./databaseRoute/branchs.js');
 const showtimes = require('./databaseRoute/showtimes.js');
 const chairs = require('./databaseRoute/chairs.js');
+const foods = require('./databaseRoute/foods.js');
+const combos = require('./databaseRoute/combos.js');
 const connection = require('./connection.js');
-
 const express = require('express');
 const PORT=3000;
 const app = express();
@@ -18,6 +19,7 @@ app.use('/directors',directorRoutes);
 app.use('/branchs',branchs);
 app.use('/showtimes',showtimes);
 app.use('/chairs',chairs);
-
+app.use('/foods',foods);
+app.use('/combos',combos);
 app.get('/',(req, res)=>{res.send("index db")})
 app.listen(PORT,()=>console.log("data connection port: "+PORT))

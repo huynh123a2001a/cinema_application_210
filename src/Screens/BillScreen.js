@@ -5,6 +5,12 @@ import styles from '../Css/pageCss';
 export default function BillView({navigation,route}){
     const billData = route.params;
     console.log(billData);
+    function total()
+    {
+        let total=billData.priceTicket*billData.chairs.length;
+        billData.foods.map(item=>item.foodPrice?total+=item.foodPrice*item.quality:total+=item.comboPrice*item.quality)
+        return total;
+    }
     const infoBill = () =>
     {
     return(
@@ -31,7 +37,7 @@ export default function BillView({navigation,route}){
             </View>
             <View style={{flex:1, justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
-                    Time
+                    Thời gian
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
                         : {billData.showDate}|{billData.showTime}
                     </Text>
@@ -39,7 +45,7 @@ export default function BillView({navigation,route}){
             </View>
             <View style={{flex:1, justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
-                    Chairs
+                     Số ghế đặt
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
                         : {" "+billData.chairs}.
                     </Text>
@@ -47,18 +53,19 @@ export default function BillView({navigation,route}){
             </View>
             <View style={{flex:1,justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
-                    Other
+                    Tổng phụ phẩm:
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
-                        : Chưa thêm dữ liệu
+                        {billData.foods.length>0?" "+billData.foods.map(item=>item.foodID?" "+item.foodName+" x"+item.quality:" "+item.comboName+" x"+item.quality):"Không có mua thêm"}.
                     </Text>
                 </Text>
             </View>
             <View style={{flex:1,justifyContent:'center', marginLeft:'5%', alignItems:'center'}}>
             <Text style={[styles.titleContentText]}> 
-            Total
+            Tổng: {total()}
             </Text>
         </View>
     </View>
+    
     )
     }
     const infoBillView = () =>{
@@ -73,9 +80,10 @@ export default function BillView({navigation,route}){
     <View style={{flex:2, marginLeft:"5%", marginRight:'5%', alignItems:'center'}}>
         <Text style={{maxHeight:'15%'}}>-----------------------------------------------------------------------</Text>
         <View style={{marginLeft:"5%", marginRight:'5%', marginBottom:'10%', alignItems:'center', justifyContent:'center',marginTop:'5%'}}>
-        <Text style={{fontSize:16}}> {billData.addressName}
-
-        </Text>
+            <Text style={{fontSize:16}}> 
+                {billData.addressName}
+            </Text>
+            <Text style={{fontSize:10}}>Nhấn vào để xem chi tiết</Text>
         </View>
     </View>
     )
@@ -85,11 +93,12 @@ export default function BillView({navigation,route}){
     return (
     <LinearGradient style={{maxWidth:"70%", maxHeight:"80%", width:10000, height:10000, backgroundColor:'yellow', borderRadius:30, marginTop:"5%", borderWidth:1}} colors={['#FF9933', '#FFCC33','#FFFF66', '#FFFF99','#FFFF66','#FFCC33', '#FF9933',]}
         start={{ x: 0.7, y: 0 }}
-        end={{x: 0.7, y:1}}>    
-        {infoBillView()}
-        {addressTicket()}
+        end={{x: 0.7, y:1}}>   
+        <TouchableOpacity style={{width:"100%", height:"100%"}}>
+            {infoBillView()}
+            {addressTicket()}
+        </TouchableOpacity>
     </LinearGradient>
-    //  </View>
     )
     }
     const buttonSend = () =>

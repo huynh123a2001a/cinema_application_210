@@ -72,9 +72,9 @@ export default function TicketsView({navigation, route})
     })
   }
   /*=================================================*/
-  const onBill = (chairs) =>{
+  const onFoodCombos = (chairs) =>{
     ticketsData.chairs=chairs;
-    navigation.navigate("Thanh toán",ticketsData);
+    navigation.navigate("Phụ phẩm",ticketsData);
   }
   /*=================================================*/
   const setChair = (value) =>
@@ -153,9 +153,9 @@ export default function TicketsView({navigation, route})
         </View>
         </ScrollView>
         <View style={{width:"100%", height:55, backgroundColor:"orange", borderWidth:1, alignItems:'center',justifyContent:'center'}}>
-          <TouchableOpacity style={{width:250,height:30, backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onBill(chairs)}>
+          <TouchableOpacity style={{width:"30%",height:"70%", backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onFoodCombos(chairs)}>
             <Text>
-              Thông tin thanh toán: {statusC}
+              Tiếp tục
             </Text>
           </TouchableOpacity>
         </View>
