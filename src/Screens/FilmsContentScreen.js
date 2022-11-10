@@ -10,10 +10,12 @@ import localhost from '../Route/configIP';
 import { WebView } from 'react-native-webview';
 export default function FilmsContentView({navigation, route})
 {   
+    
     const filmData=route.params;
     const [isLoading, setLoading] = useState(true);
     const [filmContentData, setFilmContentData] = useState([]);
     const [directorFilm, setDirectorFilm] = useState([]);
+    console.disableYellowBox = true;
     const getFilmContent = async () => {
         try {
          console.log(filmData.filmID);

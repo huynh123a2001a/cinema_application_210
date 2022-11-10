@@ -1,11 +1,10 @@
 import {React} from 'react-native';
-import { DrawerContent } from '../DrawerDesign/DrawerContent';
+import { DrawerContent } from '../DrawerDesign/DrawerContentAdmin';
 import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 import TabBottomView from './TabBottom';
 import handleApp from '../Handle/setHandleApp.json';
-import VouchersView from './VouchersScreen'
 const Drawer = createDrawerNavigator();
 export default function DrawerTab({navigation})
 {
@@ -23,10 +22,11 @@ export default function DrawerTab({navigation})
                   fontSize: 20,
                 },
               }}>
+            { handleApp.isLanguage==false?
               <Drawer.Screen name="Trang chủ" component={TabBottomView} />
+              :
               <Drawer.Screen name="Home page" component={TabBottomView} />
-              <Drawer.Screen name="Mã giảm giá" component={VouchersView} />
-              <Drawer.Screen name="Vouchers" component={VouchersView} />   
+            }
         </Drawer.Navigator>
        
     );

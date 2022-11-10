@@ -32,30 +32,54 @@ export function DrawerContent(props)
       try{
       setIsLanguage(!isLanguage);
       handleApp.isLanguage = !handleApp.isLanguage;
-      props.navigation.push("DrawerTab")
+      props.navigation.push("DrawerTabAdmin")
       }
       catch (e) {console.log(e);}
     }
-    function onIndex()
+    function ProfileManagers()
     {
       props.navigation.closeDrawer();
-      handleApp.isLanguage==false?
-        props.navigation.navigate('Trang chủ')
-        :
-        props.navigation.navigate('Home page')
+      return props.navigation.navigate('Trang chủ');
     }
-    function onVouchers()
+    function UsersManagers()
     {
       props.navigation.closeDrawer();
-      handleApp.isLanguage==false?
-        props.navigation.navigate('Mã giảm giá')
-        :
-        props.navigation.navigate('Vouchers')
+      return props.navigation.navigate('Trang chủ');
     }
-    function onUser()
+    function CinemaManagers()
     {
       props.navigation.closeDrawer();
-      return props.navigation.navigate('User');
+      return props.navigation.navigate('Trang chủ');
+    }
+    function MembersManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
+    }
+    function ProfileManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
+    }
+    function FilmsManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
+    }
+    function PaymentManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
+    }
+    function NewsManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
+    }
+    function EventManagers()
+    {
+      props.navigation.closeDrawer();
+      return props.navigation.navigate('Trang chủ');
     }
     function Logout()
     {
@@ -90,13 +114,10 @@ export function DrawerContent(props)
                 </Caption>
               </View>
               <View style={styles.row}>
-              <View style={styles.section}>
-                  <Caption style={[styles.Caption, {color:'blue', paddingLeft:3,}]}>
-                    {handleApp.isLanguage==false?"Thành viên: ":"Membership: "}
+              <View style={[styles.section,{marginLeft:"35%"}]}>
+                  <Caption style={[styles.Caption, {color:'red', paddingLeft:3}]}>
+                    Administrator
                   </Caption>
-                  <Paragraph style={[styles.Paragraph, styles.Caption]}>
-                    {handleApp.isLanguage==false?Users.membership==""?"Chưa đăng ký thành viên":Users.membership:Users.membershipEn==""?"Not registered member":Users.membershipEn}
-                  </Paragraph>
                 </View>
                 { Users.membership==""?'':
                 <View style={styles.section}>
@@ -111,12 +132,16 @@ export function DrawerContent(props)
               </View>
               <LinearGradient colors={['#FFCC66', '#FFFFCC', '#FFCC66']}
               start={{ x: 0.2, y: 0 }}
-              end={{x: 1, y:1}} style={{borderWidth:1}}>
+              end={{x: 1, y:1}} style={{borderWidth:1}}>              
               <Drawer.Section style={styles.drawerSection}>
-              <DrawerItem icon={({color, size})=>(<Icon name="film" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Trang chủ":"Home page"} onPress={(onIndex)}></DrawerItem>
-              <DrawerItem icon={({color, size})=>(<Icon name="ticket" size={20} color="#f90"/>)} label={handleApp.isLanguage==false?"Mã giảm giá":"Vouchers"} onPress={(onVouchers)}></DrawerItem>
-              <DrawerItem icon={({color, size})=>(<Icon name="history" size={20} color="#001"/>)} label={handleApp.isLanguage==false?"Thông tin cá nhân":"Profile"} onPress={(onUser)}></DrawerItem>
-              <DrawerItem icon={({color, size})=>(<Icon name="history" size={20} color="#001"/>)} label={handleApp.isLanguage==false?"Đăng xuất":"Logout"} onPress={Logout}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Thông tin cá nhân":"Profile"} onPress={(ProfileManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý Tài khoản":"Users manager"} onPress={(UsersManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý rạp":"Cinema manager"} onPress={(CinemaManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý thành viên":"Members manager"} onPress={(MembersManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý phim":"Films manager"} onPress={(FilmsManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý thanh toán":"Payment Managers"} onPress={(PaymentManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý tin tức":"News manager"} onPress={(NewsManagers)}></DrawerItem>
+              <DrawerItem icon={({color, size})=>(<Icon name="wrench" size={20} color="#000"/>)} label={handleApp.isLanguage==false?"Quản lý sự kiện":"Event manager"} onPress={(EventManagers)}></DrawerItem>
               </Drawer.Section>
               </LinearGradient>
               <Drawer.Section title={handleApp.isLanguage==false?"Chế độ xem":"View mode"}>

@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const connection = require('../connection.js');
 const CryptoJS = require('crypto-JS');
 const tripledes = require('crypto-js/tripledes');
+const moment = require('moment');
 router.get('/',(req, res)=>
 {
     res.send("don't check user");
@@ -19,23 +20,34 @@ router.get('/:id',(req, res)=>
     });
 });
 router.post('/login',(req,res)=>{
-    
+    console.log(1);
     setUsername =req.body.username;
     setPassword =req.body.password;
     var passDES ="";
     var setKey="cinema210";
-    var createID = uuidv4();
+    var setID = uuidv4();
     console.log(2+":"+setUsername+":"+setPassword);
     var sql = "SELECT * FROM users WHERE userName=\""+setUsername+"\"";
     connection.query(sql, function(err,results) {
         
-            results.map((pass)=>passDES=pass.password)
+            results.map((pass)=>{return passDES=pass.password,setID=pass.userID})
             passDES = CryptoJS.TripleDES.decrypt(passDES, setKey).toString((CryptoJS.enc.Utf8))
             setPassword==passDES?
-            
-                res.json(results.map((id)=>id.userID))
+            (
+                console.log("Loggin success"),
+                sql = "SELECT * FROM memberships WHERE userID=\""+setID+"\"",
+                connection.query(sql, function(err,resultsmember) {
+                    resultsmember==""?
+                        res.json({user:results,member:false})
+                    :
+                        res.json({user:results,member:resultsmember})
+                })
+            )
             :
-                res.json(false);
+            (
+                console.log("Loggin failed"),
+                res.json(false)
+            )
             
         });
 });
@@ -44,6 +56,13 @@ router.post('/signup',(req,res)=>{
     
     setUsername =req.body.username;
     setPassword =req.body.password;
+    setEmail = req.body.email;
+    setFullName = req.body.fullName;
+    setAddress = req.body.address+" ";
+    var dateTime = moment()
+      .utcOffset('+05:30')
+      .format('YYYY-MM-DD hh:mm:ss');
+    let permission = 0;
     var setKey="cinema210";
     var createID = uuidv4();
     console.log(2+":"+setUsername+":"+setPassword);
@@ -59,7 +78,7 @@ router.post('/signup',(req,res)=>{
                 console.log(4);
                 setPassword = CryptoJS.TripleDES.encrypt(setPassword, setKey);
                 console.log(5 +":cryp:"+setPassword);
-                sql = "INSERT INTO users (`userID`,`userName`,`password`) VALUES ('"+createID+"','"+setUsername+"','"+setPassword+"')";
+                sql = "INSERT INTO users (`userID`,`userName`,`password`,`address`, `email`, `createDate`, `fullName`, `permissions`) VALUES ('"+createID+"','"+setUsername+"','"+setPassword+"','"+setAddress+"','"+setEmail+"','"+dateTime+"','"+setFullName+"',"+permission+")";
                 connection.query(sql);
                 res.json(createID);
         }

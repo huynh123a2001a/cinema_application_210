@@ -67,7 +67,6 @@ export default function IndexView({navigation})
             <ScrollView>
                 <View style={styles.popupTrailerCard}>
                     <View style={[styles.modelPopupTrailer,{paddingBottom:70}]}>
-                        
                         <View style={{width:"100%"}}>
                         <Image style={[styles.mainCard,{borderRadius:10}]} source={{
                             uri:""+dataShow.map(item => item.image)+""}}>

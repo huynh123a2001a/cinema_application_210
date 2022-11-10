@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,TouchableOpacity, TouchableHighlight, Image,ScrollView} from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity, TouchableHighlight, Alert, Image,ScrollView} from 'react-native';
 import {React} from 'react-native';
 import styles from '../Css/pageCss';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -31,10 +31,27 @@ export default function TicketsView({navigation, route})
     setLoading(false);
    }
   }
+  const messageArlert = (value) =>
+    {
+        Alert.alert(
+        "Thông báo",
+        value
+        )
+    }
   useEffect(() => {
     getChairs();
   }, []);
+  const countChairs = (value) =>{
+    if(count >= 8)
+      return messageArlert("Có thể chọn tối đa 8 ghế");
+    item.status=3
+    setCount(count + 1)
+  }
  /*=================================================*/
+  const setChair = (value) =>
+    {
+      chairsData.filter(item => item.chairName == value?item.status==1?count>=8?messageArlert("Có thể chọn tối đa 8 ghế"):(item.status=3,setCount(count + 1)):(item.status=1,setCount(count - 1)):'')
+    }
  function getHidden(data)
  {
   chairsData.map(hiddenValue =>
@@ -43,16 +60,17 @@ export default function TicketsView({navigation, route})
         return data.push(hiddenValue.chairName.trim());
     }
   )
- } 
+ }
  /*=================================================*/
+  console.disableYellowBox = true;
   const arrayString = ([""]);
   const arrayNumber = ([]);
   const hidden =[];
   const [isLoading, setLoading] = useState(true);
   const [chairsData, setChairsData] = useState([]);
   var chairs =([]);
-  let xstatus = useState([]);
-  const [statusC,setStatusC] = useState(0);
+  const [count, setCount] = useState(0);
+  var [ isPress, setIsPress ] = useState(false);
   const ticketsData = route.params;
   getChairTable(arrayString,arrayNumber,chairsData);
   getHidden(hidden);
@@ -72,34 +90,33 @@ export default function TicketsView({navigation, route})
       }
     })
   }
+  function statusFind(listUseState, value)
+  {
+    return listUseState.find(function(findvalue){
+      if (value == findvalue.chairName)
+      {
+        return findvalue;
+      }
+    })
+  }
   /*=================================================*/
-  const onFoodCombos = (chairs) =>{
-    ticketsData.chairs=chairs;
+  const onFoodCombos = () =>{
+    try{
+    ticketsData.chairs=[];
+    chairsData.filter(item => item.status==3?ticketsData.chairs.push(item.chairName):'')
+    console.log(ticketsData)
     handleApp.isLanguage==false?
     navigation.navigate("Phụ phẩm",ticketsData)
     :
     navigation.navigate("By-products",ticketsData);
-  }
-  /*=================================================*/
-  const setChair = (value) =>
-    {
-      xstatus=0;
-      chairs.filter((values) => {
-        if(values==value)
-          {
-            chairs = arrayRemove(chairs, value);
-            xstatus=1;
-          }
-      })
-      if(xstatus==0){
-        chairs.push(value);
-      }
-      console.log(chairs)
     }
+    catch(e)
+    {console.log(e)}
+
+  }
     /*=================================================*/
   function createArrayChair(number, numberz)
   {
-    
     if(number === "")
     {
       return(
@@ -115,11 +132,30 @@ export default function TicketsView({navigation, route})
       </View>
       )
     }
+    if(statusFind(chairsData,(numberz+number)).status==2)
+    {
+      return(
+        <View style={[stylesz.choosed]}>
+          <Text style={styles.contentText}>
+            {numberz+number}
+          </Text>
+      </View>
+      )
+    }
+    var touchProps = {
+      activeOpacity: 1,
+      underlayColor: 'orange',                               // <-- "backgroundColor" will be always overwritten by "underlayColor"
+      style: statusFind(chairsData,(numberz+number)).status==1? stylesz.btnNormal : stylesz.btnPress, // <-- but you can still apply other style changes
+      onHideUnderlay: () => setIsPress(false),
+      onShowUnderlay: () => setIsPress(true),
+      onPress: () => console.log('HELLO'),                 // <-- "onPress" is apparently required
+    }
     return(
-      <TouchableOpacity style={[styles.buttonChooseChair,{backgroundColor: "orange"}]}  onPress={()=> setChair((numberz+number))} key={numberz+number}>
-        <Text style={styles.contentText}>
-          {numberz+number}</Text>
-      </TouchableOpacity>
+      <TouchableHighlight style={[styles.buttonChooseChair]} {...touchProps} onPress={()=> setChair((numberz+number))} key={numberz+number}>
+          <Text style={styles.contentText}>
+            {numberz+number}
+          </Text>
+      </TouchableHighlight>
     );
   }
   /*=================================================*/
@@ -156,13 +192,52 @@ export default function TicketsView({navigation, route})
             }
         </View>
         </ScrollView>
-        <View style={{width:"100%", height:55, backgroundColor:"orange", borderWidth:1, alignItems:'center',justifyContent:'center'}}>
-          <TouchableOpacity style={{width:"30%",height:"70%", backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onFoodCombos(chairs)}>
+        <View style={{width:"100%", height:55, backgroundColor:"orange", borderWidth:1, flexDirection:'row'}}>
+          {/* <TouchableOpacity style={{ borderRadius:10,width:"30%",height:"70%", backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onFoodCombos()}>
             <Text>
               {handleApp.isLanguage==false?"Tiếp tục":"Continue"}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={{ flex:3, left:'5%', alignItems:'center',justifyContent:'center'}}>
+            <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Số ghế đã chọn: "+count:"Chairs choose: "+count}</Text>
+          </View>
+          <View style={{flex:6,left:'40%',justifyContent:'center'}}>
+            <TouchableOpacity style={{ borderRadius:10,width:"40%",height:"70%", backgroundColor:"white",borderWidth:1, alignItems:'center',justifyContent:'center'}} onPress={()=>onFoodCombos()}>
+              <Text>
+                {handleApp.isLanguage==false?"Tiếp tục":"Continue"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
     </LinearGradient>
     );
 }
+var stylesz = StyleSheet.create({
+  btnNormal: {
+    borderWidth:0.5,
+    borderRadius:30,
+    width: "90%",
+    height:'90%',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'orange'
+  },
+  btnPress: {
+    borderWidth:0.5,
+    borderRadius:30,
+    width: "90%",
+    height:'90%',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'green'
+  },
+  choosed: {
+    borderWidth:0.5,
+    borderRadius:30,
+    width: "90%",
+    height:'90%',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'red'
+  }
+});

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; 
 import LoginView from './src/Screens/LoginScreen';
 import DrawerTab from './src/Screens/DrawerTab';
+import DrawerTabAdmin from './src/AdminScreens/DrawerTab';
 import FilmsView from './src/Screens/FlimsScreen';
 import NewsView from './src/Screens/NewsScreen';
 import ContactView from './src/Screens/ContactsScreen';
@@ -17,12 +18,12 @@ import BranchView from './src/Screens/Branch';
 import BillView from './src/Screens/BillScreen';
 import FoodsView from './src/Screens/FoodCombo';
 import TestView from './src/Screens/TestScreen';
-// import routes from './src/Route/db';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{
+      <Stack.Navigator initialRouteName="DrawerTab" screenOptions={{
         headerStyle: {
           backgroundColor: '#330066',
         },
@@ -59,6 +60,7 @@ export default function App() {
         <Stack.Screen name="Phụ phẩm" component={FoodsView} />
         <Stack.Screen name="By-products" component={FoodsView} />
         <Stack.Screen name="TEST VIEW" component={TestView} />
+        <Stack.Screen name="DrawerTabAdmin" component={DrawerTabAdmin} options={{headerShown: false}} />
     </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,7 +8,6 @@ export default function BillView({navigation,route}){
     
     try {
     const billData = route.params;
-    console.log(billData);
     function total()
     {
         let total=billData.priceTicket*billData.chairs.length;
@@ -22,6 +21,7 @@ export default function BillView({navigation,route}){
         return total;
     }
     const [modalVisible, setModalVisible] = useState(false);
+    console.disableYellowBox = true;
     function popupBill()
         {
             return(

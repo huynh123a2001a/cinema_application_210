@@ -6,9 +6,10 @@ const showtimes = require('./databaseRoute/showtimes.js');
 const chairs = require('./databaseRoute/chairs.js');
 const foods = require('./databaseRoute/foods.js');
 const combos = require('./databaseRoute/combos.js');
+const vouchers = require('./databaseRoute/vouchers.js');
 const connection = require('./connection.js');
 const express = require('express');
-const PORT=3000;
+const PORT=3001;
 const app = express();
 const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
@@ -21,5 +22,6 @@ app.use('/showtimes',showtimes);
 app.use('/chairs',chairs);
 app.use('/foods',foods);
 app.use('/combos',combos);
+app.use('/vouchers',vouchers);
 app.get('/',(req, res)=>{res.send("index db")})
 app.listen(PORT,()=>console.log("data connection port: "+PORT))

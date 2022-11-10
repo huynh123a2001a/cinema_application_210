@@ -8,7 +8,8 @@ import localhost from '../Route/configIP'
 export default function FilmsView({navigation})
 {   const [isLoading, setLoading] = useState(true);
     const [filmsData, setFilmsData] = useState([]);
-    const [language, setLanguage] = useState(handleApp.isLanguage)
+    const [language, setLanguage] = useState(handleApp.isLanguage);
+    console.disableYellowBox = true;
     const getFilms = async () => {
         try {
          const response = await fetch(localhost()+"/films");

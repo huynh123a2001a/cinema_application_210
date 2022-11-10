@@ -198,7 +198,7 @@ export default styles = StyleSheet.create({
     mainCard:{
         display:'block',
         borderWidth:0.3,
-        marginTop:'5%',
+        marginTop:'0%',
         borderRadius:50,
         maxWidth:'100%',
         width:'auto',
