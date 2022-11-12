@@ -7,6 +7,7 @@ const chairs = require('./databaseRoute/chairs.js');
 const foods = require('./databaseRoute/foods.js');
 const combos = require('./databaseRoute/combos.js');
 const vouchers = require('./databaseRoute/vouchers.js');
+const paypal = require('./paymentRoute/paypal.js');
 const connection = require('./connection.js');
 const express = require('express');
 const PORT=3001;
@@ -23,5 +24,6 @@ app.use('/chairs',chairs);
 app.use('/foods',foods);
 app.use('/combos',combos);
 app.use('/vouchers',vouchers);
+app.use('/paypal',paypal);
 app.get('/',(req, res)=>{res.send("index db")})
 app.listen(PORT,()=>console.log("data connection port: "+PORT))

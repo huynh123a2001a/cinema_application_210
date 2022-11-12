@@ -23,6 +23,7 @@
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "navigation": "^6.1.0",
+    "paypal-rest-sdk": "^1.8.1",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-animated-styles": "^0.9.0",

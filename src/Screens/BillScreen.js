@@ -4,10 +4,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
 import handleApp from '../Handle/setHandleApp.json';
 import {useState} from 'react';
+import PaypalView from './Paypal.js'
 export default function BillView({navigation,route}){
-    
     try {
     const billData = route.params;
+    const [payment, setPayment] = useState(null);
+    const PaymentAlert = () =>
+        Alert.alert(
+        handleApp.isLanguage==false?"Chọn phương thức thanh toán":"Choose a Payment Method",
+        "",
+        [
+            {
+              text: "Paypal",
+              onPress: () => setPayment("Paypal")
+            },
+            {
+              text: "Momo (Đang cập nhật)",
+              onPress: () => setPayment("Momo")
+              
+            },
+            { text: handleApp.isLanguage==false?"Quay lại":"Close", onPress: () =>setPayment(payment), style: "cancel" }
+          ]
+        
+        )
     function total()
     {
         let total=billData.priceTicket*billData.chairs.length;
@@ -93,11 +112,11 @@ export default function BillView({navigation,route}){
     {
     return(
     <View style={{width:"100%", height:"100%"}}>
-        <View style={{flex:2, alignItems:"center",justifyContent:"center"}}>
+        <View style={{alignItems:"center",justifyContent:"center"}}>
             <Text style={{fontSize:30, fontWeight:'bold'}}>{billData.cinemaName}</Text>
                 <Text style={{maxHeight:'15%'}}>-----------------------------------------------------------------------</Text>
         </View>
-        <View style={{flex:1, alignItems:'center'}}>
+        <View style={{marginTop:"5%" ,alignItems:'center'}}>
             <Text style={[styles.titleContentText]}> 
             {handleApp.isLanguage==false?"Phim":"Film"}
             </Text>
@@ -105,7 +124,7 @@ export default function BillView({navigation,route}){
                 {handleApp.isLanguage==false?billData.filmName.trim():billData.filmName1.trim()}
             </Text>
         </View>
-            <View style={{flex:1,justifyContent:'center', marginLeft:'5%'}}>
+            <View style={{marginTop:"5%" ,justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
                     Room
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
@@ -113,7 +132,7 @@ export default function BillView({navigation,route}){
                     </Text>
                 </Text>
             </View>
-            <View style={{flex:1, justifyContent:'center', marginLeft:'5%'}}>
+            <View style={{marginTop:"5%" , justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
                     {handleApp.isLanguage==false?"Thời gian":"Time"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
@@ -121,7 +140,7 @@ export default function BillView({navigation,route}){
                     </Text>
                 </Text>
             </View>
-            <View style={{flex:1, justifyContent:'center', marginLeft:'5%'}}>
+            <View style={{marginTop:"5%" , justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
                      {handleApp.isLanguage==false?"Số ghế đặt":"Number of seats book"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
@@ -129,18 +148,18 @@ export default function BillView({navigation,route}){
                     </Text>
                 </Text>
             </View>
-            <View style={{flex:1,justifyContent:'center', marginLeft:'5%'}}>
+            <View style={{marginTop:"5%" ,justifyContent:'center', marginLeft:'5%'}}>
                 <Text style={[styles.titleContentText]}> 
                 {handleApp.isLanguage==false?"Tổng phụ phẩm:":"By-products total:"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
-                        {billData.foods.length>0?" "+billFoods():"Không có mua thêm"}.
+                        {billData.foods.length>0?" "+billFoods():handleApp.isLanguage==false?"Không có mua thêm":"No additional purchases"}.
                     </Text>
                 </Text>
             </View>
-            <View style={{flex:1,justifyContent:'center', marginLeft:'5%', alignItems:'center'}}>
-            <Text style={[styles.titleContentText]}> 
-            {handleApp.isLanguage==false?"Tổng":"Total:"} {total()}
-            </Text>
+            <View style={{marginTop:"5%" ,justifyContent:'center', marginLeft:'5%', alignItems:'center'}}>
+                <Text style={[styles.titleContentText]}> 
+                {handleApp.isLanguage==false?"Tổng":"Total:"} {total()}
+                </Text>
         </View>
     </View>
     
@@ -148,14 +167,14 @@ export default function BillView({navigation,route}){
     }
     const infoBillView = () =>{
     return(
-    <View style={{flex:6, marginTop:"10%", marginLeft:"5%", marginRight:'5%'}}>
+    <View style={{flex:1, marginTop:"10%", marginLeft:"5%", marginRight:'5%'}}>
         {infoBill()}
     </View>
     )
     }
     const addressTicket = () =>{
     return(
-    <View style={{flex:2, marginLeft:"5%", marginRight:'5%', alignItems:'center'}}>
+    <View style={{flex: 2, marginLeft:"5%", marginRight:'5%', alignItems:'center'}}>
         <Text style={{maxHeight:'15%'}}>-----------------------------------------------------------------------</Text>
         <View style={{marginLeft:"5%", marginRight:'5%', marginBottom:'10%', alignItems:'center', justifyContent:'center',marginTop:'5%'}}>
             <Text style={{fontSize:16}}> 
@@ -171,7 +190,7 @@ export default function BillView({navigation,route}){
     const ticketCard = () =>
     {
     return (
-    <LinearGradient style={{maxWidth:"70%", maxHeight:"80%", width:10000, height:10000, backgroundColor:'yellow', borderRadius:30, marginTop:"5%", borderWidth:1}} colors={['#FF9933', '#FFCC33','#FFFF66', '#FFFF99','#FFFF66','#FFCC33', '#FF9933',]}
+    <LinearGradient style={{maxWidth:"70%", maxHeight:"80%", width:"100%", height:'100%', backgroundColor:'yellow', borderRadius:30, marginTop:"5%", borderWidth:1}} colors={['#FF9933', '#FFCC33','#FFFF66', '#FFFF99','#FFFF66','#FFCC33', '#FF9933',]}
         start={{ x: 0.7, y: 0 }}
         end={{x: 0.7, y:1}}>   
         <TouchableOpacity style={{width:"100%", height:"100%"}} onPress={() => setModalVisible(true)}>
@@ -184,18 +203,37 @@ export default function BillView({navigation,route}){
     const buttonSend = () =>
     {
     return(
-    <View style={{maxWidth:"70%", maxHeight:"10%", backgroundColor:"darkgreen", width:10000, height:10000, marginTop:"3%",borderRadius:30, justifyContent:"center",alignItems:"center"}}>
-        <Text style={{ fontSize:20, fontWeight:'bold'}}> {handleApp.isLanguage==false?"Thanh toán":"Pay"} </Text>
-    </View>
+    payment=="Paypal"?
+        <View style={{borderWidth:1,maxWidth:"70%", maxHeight:"10%", backgroundColor:"#3366FF", width:'100%', height:'100%',borderRadius:30 }}>
+            <PaypalView/>
+        </View>
+    :
+        payment == "Momo"?
+        <View style={{alignItems:'center',justifyContent:'center',borderWidth:1,maxWidth:"70%", maxHeight:"10%", backgroundColor:"#FF33CC", width:'100%', height:'100%',borderRadius:30 }}>
+            <Text style={{ fontSize:20, fontWeight:'bold'}}>{handleApp.isLanguage==false?"Thanh toán Momo":"Payment Momo"}</Text>
+        </View>
+        :
+        <View style={{alignItems:'center',justifyContent:'center',maxWidth:"70%", maxHeight:"10%",width:'100%', height:'100%',borderRadius:30 }}>
+            <Text> </Text>
+        </View>
     )
     }
     const ViewBill = () =>{
     return(
-    <LinearGradient style={{width:'100%', height:'100%', alignItems:'center', justifyContent:'center'}} colors={['#333399', '#0099FF','#33CCFF', '#99FFFF','#33CCFF','#0099FF', '#333399',]}
+    <LinearGradient style={{width:'100%', height:'100%'}} colors={['#333399', '#0099FF','#33CCFF', '#99FFFF','#33CCFF','#0099FF', '#333399',]}
         start={{ x: 0.2, y: 0 }}
         end={{x: 1, y:1}}>
-        {ticketCard()}
-        {buttonSend()}
+        <ScrollView>
+            <View style={{alignItems:'center'}}>
+            {ticketCard()}
+            <View style={{width:'100%', height:50, alignItems:'center', justifyContent:'center'}}>
+                <TouchableOpacity style={{width:'70%', borderWidth:0.3, borderRadius:30, height:'80%', backgroundColor:'#EEEEEE',alignItems:'center', justifyContent:'center', opacity:0.8}} onPress={PaymentAlert}>
+                    <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Chọn phương thức thanh toán":"Choose a Payment Method"}</Text>
+                </TouchableOpacity>
+            </View>
+            {buttonSend()}
+            </View>
+        </ScrollView>
     </LinearGradient>
     )
     }

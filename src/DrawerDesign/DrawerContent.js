@@ -31,8 +31,11 @@ export function DrawerContent(props)
     {
       try{
       setIsLanguage(!isLanguage);
-      handleApp.isLanguage = !handleApp.isLanguage;
-      props.navigation.push("DrawerTab")
+      handleApp.isLanguage = !handleApp.isLanguage
+      handleApp.isLanguage==false?
+        props.navigation.navigate('Trang chủ')
+        :
+        props.navigation.navigate('Home page')
       }
       catch (e) {console.log(e);}
     }
@@ -55,7 +58,7 @@ export function DrawerContent(props)
     function onUser()
     {
       props.navigation.closeDrawer();
-      return props.navigation.navigate('User');
+      return props.navigation.navigate('Thông tin tài khoản');
     }
     function Logout()
     {

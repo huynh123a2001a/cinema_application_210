@@ -6,6 +6,7 @@ import {
 import TabBottomView from './TabBottom';
 import handleApp from '../Handle/setHandleApp.json';
 import VouchersView from './VouchersScreen'
+import UsersView from './UsersScreen'
 const Drawer = createDrawerNavigator();
 export default function DrawerTab({navigation})
 {
@@ -26,7 +27,9 @@ export default function DrawerTab({navigation})
               <Drawer.Screen name="Trang chủ" component={TabBottomView} />
               <Drawer.Screen name="Home page" component={TabBottomView} />
               <Drawer.Screen name="Mã giảm giá" component={VouchersView} />
-              <Drawer.Screen name="Vouchers" component={VouchersView} />   
+              <Drawer.Screen name="Vouchers" component={VouchersView} />
+              <Drawer.Screen name="Thông tin tài khoản" component={UsersView} />
+              <Drawer.Screen name="Profile" component={UsersView} />
         </Drawer.Navigator>
        
     );

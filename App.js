@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="DrawerTab" screenOptions={{
+      <Stack.Navigator initialRouteName="Login" screenOptions={{
         headerStyle: {
           backgroundColor: '#330066',
         },

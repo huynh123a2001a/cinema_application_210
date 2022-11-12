@@ -11,12 +11,12 @@ router.get('/',(req, res)=>
 });
 router.get('/:id',(req, res)=>
 {   
-    var sql = "SELECT userID FROM users WHERE userID=\""+req.params.id+"\"";
+    var sql = "SELECT * FROM users WHERE userID=\""+req.params.id+"\"";
     connection.query(sql, function(err, results) {
       if (err) throw err;
       results!=""?
-      res.send(results):
-      res.send(false);
+        res.send(results):
+        res.send(false);
     });
 });
 router.post('/login',(req,res)=>{
