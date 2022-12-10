@@ -23,5 +23,15 @@ router.post('/',(req, res)=>
       res.send(false);
     });
 });
+router.post('/billdetails',(req, res)=>
+{   
+    var sql = "SELECT * FROM schedules WHERE scheduleID="+req.body.id+"";
+    connection.query(sql, function(err, results) {
+      if (err) throw err;
+      results!=""?
+      res.json(results):
+      res.send(false);
+    });
+});
 
 module.exports = router

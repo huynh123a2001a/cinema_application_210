@@ -1,6 +1,6 @@
 export default function getLocalhost()
 {
-    const host = "192.168.1.77";
+    const host = "172.20.10.2";
     const portAPI = "3001";
-    return "http://"+host+":"+portAPI
+    return "http://"+host+":"+portAPI;
 }
