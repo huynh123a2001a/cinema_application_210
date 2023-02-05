@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import YoutubeIframe from "react-native-youtube-iframe";
 import handleApp from '../Handle/setHandleApp.json';
+import customDateTime from '../Handle/customDateTime';
 import localhost from '../Route/configIP';
 import { WebView } from 'react-native-webview';
 export default function FilmsContentView({navigation, route})
@@ -64,7 +65,7 @@ export default function FilmsContentView({navigation, route})
                 }}
             >
                 <View style={styles.popupTrailerCard}>
-                    <View style={styles.modelPopupTrailer}>
+                    <ImageBackground style={styles.modelPopupTrailer} source={require('../images/christmasFlower.png')}>
                         <ScrollView>
                         <View style={{justifyContent:'center', alignItems:'center', top:'5%'}}>
                         <Text style={styles.titleText}>Trailer{route.params.filmName}</Text>
@@ -83,7 +84,7 @@ export default function FilmsContentView({navigation, route})
                         </Pressable>
                         </View>
                         </ScrollView>
-                    </View>
+                    </ImageBackground>
                 </View>
             </Modal>
         );
@@ -108,12 +109,11 @@ export default function FilmsContentView({navigation, route})
             <View style={styles.filmContent}>
             {isLoading ? <ActivityIndicator style={{top:"10%"}}/> : (
                 <ScrollView>
-                    
                     <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Ngày khởi chiếu:":"Release Date:"}<Text style={styles.contentTextCard}>
-                        {" "+route.params.releaseDate.substring(0,10)}
+                        {" "+customDateTime(route.params.releaseDate).date}
                     </Text></Text>
                     <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Tình trạng:":"Status:"}<Text style={styles.contentTextCard}>
-                        {handleApp.isLanguage==false?route.params.status==1? " Đang chiếu": route.params.status==2?" Sắp chiếu":" Ngưng chiếu":route.params.status==1? " Paying": route.params.status==2?" Up comming":" End"}
+                        {handleApp.isLanguage==false?route.params.status==1? " Đang chiếu": route.params.status==2?" Sắp chiếu":" Ngưng chiếu":route.params.status==1? " Playing": route.params.status==2?" Up comming":" End"}
                     </Text></Text>
                     <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Thể loại:":"Genre"}<Text style={styles.contentTextCard}>
                     {filmContentData.map((index)=> handleApp.isLanguage==false?" "+index.genreName.trim()+".":" "+index.genreName1.trim()+".")}

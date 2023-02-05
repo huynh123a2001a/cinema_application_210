@@ -59,7 +59,7 @@ route.get('/:total',(req, res)=>
 route.get('/:total/success',(req, res)=>
 {
     try{
-        res.sendFile('/Users/tuocloi/Development/CinemaApp/src/Route/WebView/paymentSuccess.html')
+        res.sendFile('/Users/nguyentuanquynh/Development/projects/CinemaApp/src/Route/WebView/paymentSuccess.html')
         return;
     }
     catch (e)

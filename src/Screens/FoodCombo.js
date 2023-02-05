@@ -3,7 +3,7 @@ import {React} from 'react-native';
 import { useState,useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
-import localhost from '../Route/configIP'
+import localhost from '../Route/configIP';
 import NumericInput from 'react-native-numeric-input';
 import handleApp from '../Handle/setHandleApp.json';
 export default function FoodsView({navigation,route})

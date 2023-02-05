@@ -200,33 +200,35 @@ export default styles = StyleSheet.create({
         borderWidth:0.3,
         marginTop:'0%',
         borderRadius:50,
-        maxWidth:'100%',
+        maxWidth:'96%',
+        marginLeft:'2%',
+        marginRight:'2%',
         width:'auto',
-        height:500,
+        height:600,
         backgroundColor:'rgba(254,254,254,0.4)',
         shadowColor: "#000",
         shadowOffset: {
         width: 100,
-        height: 12
         },
         shadowOpacity: 0.15,
         shadowRadius: 8,
         elevation: 5
     },
     imageNews:{
-        flex:5,
+        flex:7,
         backgroundColor:'#999999',
-        borderTopLeftRadius:50,
-        borderTopRightRadius:50,
+        borderRadius:50
     },
     titleNews:{
         flex:1,
         maxWidth:'100%',
         marginLeft:'5%',
+        marginTop:'5%',
+        alignItems:'center',
         marginRight:'5%',
     }, 
     contentNews:{
-        flex:2,
+        flex:1,
         marginLeft:'5%',
         marginRight:'5%',
         marginBottom:'3%',

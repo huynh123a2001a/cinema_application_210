@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Users from '../Handle/setLoginUser.json';
 import handleApp from '../Handle/setHandleApp.json';
 import { useState,useEffect } from 'react';
+import customDateTime from '../Handle/customDateTime';
 import localhost from '../Route/configIP';
 export default function VouchersView({navigation})
 {   
@@ -28,10 +29,17 @@ export default function VouchersView({navigation})
      const copyClipboard = (value) =>
      {
         Clipboard.setString(value)
+        handleApp.isLanguage==false?
          Alert.alert(
          "Thông báo",
          "Đã copy mã giảm giá."
          )
+         :
+
+         Alert.alert(
+            "Notify",
+            "Copied discount code."
+            )
      }
     const getCardVouchers = (item) =>{
         return(
@@ -50,6 +58,9 @@ export default function VouchersView({navigation})
                             </View>
                             <View style={{flex:1, marginLeft:'5%'}}>
                                 <Text style={{fontWeight:'bold'}}>{handleApp.isLanguage==false?"Giá trị giảm":"Discount"}: <Text style={styles.contentTextCard}>{item.discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</Text></Text>
+                            </View>
+                            <View style={{flex:1, marginLeft:'5%'}}>
+                                <Text style={{fontWeight:'bold'}}>{handleApp.isLanguage==false?"Ngày hết hạn":"Expiry date"}: <Text style={styles.contentTextCard}>{customDateTime(item.expiryDate).date}</Text></Text>
                             </View>
                             <View style={{flex:2, marginLeft:'5%', marginRight:'5%', borderTopWidth:0.5}}>
                                 <ScrollView>

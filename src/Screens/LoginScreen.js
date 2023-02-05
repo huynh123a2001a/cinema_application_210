@@ -33,10 +33,10 @@ export default function LoginView({navigation})
     const submitLogin = async () =>
     {   
         try {
+        setMessage("Đang đăng nhập, vui lòng đợi");
         if(userName=='' || password=='')
             {
-                return console.log("Chưa có thông tin")
-                setLoading(false);
+                return setMessage("Chưa có thông tin")
             }
         fetch(localhost()+"/users/login", {
             method: 'POST',
@@ -53,6 +53,7 @@ export default function LoginView({navigation})
                 if(JSON.stringify(responseData)=='false')
                 {
                     messageArlert("Tài khoản hoặc mật khẩu không đúng");
+                    setMessage('');
                 }
                 else
                 {
@@ -91,6 +92,7 @@ export default function LoginView({navigation})
     }
     const submitSignUp = () =>
     {   
+        try{setMessage("Đang đăng ký, vui lòng đợi");
         fetch(localhost()+"/users/signup", {
         method: 'POST',
         headers: {
@@ -108,15 +110,26 @@ export default function LoginView({navigation})
         .then((responseData) => {
             if(JSON.stringify(responseData)=='false')
             {
-                console.log("Tài khoản đã tồn tại");
+                messageArlert("Tài khoản đã tồn tại");
+                setMessage('');
             }
             else
             {
-                console.log(JSON.stringify(responseData));
-                submitLogin();
+                responseData.map(item=> {return(
+                    loginUser.idUser = item.userID, 
+                    loginUser.email = item.email, 
+                    loginUser.userName=item.fullName, 
+                    loginUser.timeLogin=true,
+                    loginUser.avatar=item.avatar)})
+                navigation.push ('DrawerTab');
             }
         })
         .then()
+        }
+        catch(e)
+        {
+            console.log(e);
+        }
     }
     function onTestView()
     {
@@ -133,15 +146,31 @@ export default function LoginView({navigation})
                 <View style={styles.inputs}>
                         <View style={{width:'95%', marginLeft:"15%", height:140}}>
                         <ScrollView>
-                        <TextInput style={styles.input} placeholder="Username (use login)" autoCapitalize="none" onChangeText={setUsername}></TextInput>
+                        <TextInput style={styles.input} placeholder="Username (user login)" autoCapitalize="none" onChangeText={setUsername}></TextInput>
                         <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" onChangeText={setPassword}></TextInput>
                         {!isLogin && <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail}></TextInput>}
                         {!isLogin && <TextInput style={styles.input} placeholder="Full Name" onChangeText={setFullName}></TextInput>}
                         {!isLogin && <TextInput style={styles.input} placeholder="Address (Optional)" onChangeText={setAddress}></TextInput>}
-                        <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
+                        <View style={{width:'80%', height:'100%', height:'100%',alignItems:'center', marginTop:'5%'}}>
+                            <Text style={{fontSize:20, fontWeight:'bold'}}>{message}</Text>
+                        </View>
                         </ScrollView>
                         </View>
-                    
+                    {
+                    message==''||message=="Chưa có thông tin"?
+                    (
+                    isLogin?
+                    <LinearGradient
+                    // Button Linear Gradient
+                    colors={['#FF9933', '#FFCC00', '#FFCC66', '#FFCC00', '#FF9933']}
+                    start={{ x: 0.9, y: 0.7 }}
+                    end={{x: 0.1, y:0.3}}
+                    style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={()=>{isLogin? waiting():userName.trim()==""||password.trim()==""||email.trim()==""||fullName.trim()==""?messageArlert("Vui lòng điền đầy đủ thông tin."):submitLogin()}}>
+                        <Text style={styles.buttonText}>Đăng nhập</Text>
+                    </TouchableOpacity>
+                    </LinearGradient>
+                    :
                     <LinearGradient
                     // Button Linear Gradient
                     colors={['#FF9933', '#FFCC00', '#FFCC66', '#FFCC00', '#FF9933']}
@@ -149,17 +178,43 @@ export default function LoginView({navigation})
                     end={{x: 0.1, y:0.3}}
                     style={styles.button}>
                     <TouchableOpacity style={styles.button} onPress={()=>{isLogin? waiting():userName.trim()==""||password.trim()==""||email.trim()==""||fullName.trim()==""?messageArlert("Vui lòng điền đầy đủ thông tin."):submitSignUp()}}>
-                        <Text style={styles.buttonText}>Submit</Text>
+                        <Text style={styles.buttonText}>Đăng ký</Text>
                     </TouchableOpacity>
                     </LinearGradient>
-                    
+                    )
+                    :
+                    (
+                    isLogin?
+                    <LinearGradient
+                    // Button Linear Gradient
+                    colors={['#3366FF', '#00CCFF', '#99FFFF', '#00CCFF', '#3366FF']}
+                    start={{ x: 0.9, y: 0.7 }}
+                    end={{x: 0.1, y:0.3}}
+                    style={styles.button}>
+                        <View style={styles.button} onPress={()=>{isLogin? waiting():userName.trim()==""||password.trim()==""||email.trim()==""||fullName.trim()==""?messageArlert("Vui lòng điền đầy đủ thông tin."):submitLogin()}}>
+                            <Text style={styles.buttonText}>Đăng nhập</Text>
+                        </View>
+                    </LinearGradient>
+                    :
+                    <LinearGradient
+                    // Button Linear Gradient
+                    colors={['#3366FF', '#00CCFF', '#99FFFF', '#00CCFF', '#3366FF']}
+                    start={{ x: 0.9, y: 0.7 }}
+                    end={{x: 0.1, y:0.3}}
+                    style={styles.button}>
+                        <View style={styles.button} onPress={()=>{isLogin? waiting():userName.trim()==""||password.trim()==""||email.trim()==""||fullName.trim()==""?messageArlert("Vui lòng điền đầy đủ thông tin."):submitSignUp()}}>
+                            <Text style={styles.buttonText}>Đăng ký</Text>
+                        </View>
+                    </LinearGradient>
+                    )
+                    }
                     <LinearGradient
                     // Button Linear Gradient
                     colors={['#FF9900', '#FFCC33', '#FFCC66', '#FFCC33', '#FF9900']}
                     start={{ x: 0.9, y: 0.7 }}
                     end={{x: 0.1, y:0.3}}
                     style={styles.button}>
-                    <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
+                    <TouchableOpacity style={styles.buttonAlt} onPress={()=>(setIsLogin(!isLogin),setMessage(''))}>
                         <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                     </TouchableOpacity>
                     </LinearGradient>
@@ -168,23 +223,26 @@ export default function LoginView({navigation})
         </LinearGradient>
         )
     }
+    function setView()
+    {
+        return(
+                // <View style={{width:'100%',height:'100%', alignItems:'center', backgroundColor:'#999999', position:'relative', opacity:'0.7'}}>
+                //     <ImageBackground source={require('../images/backgroundLogin.jpg')} style={[styles.container,{width:'100%',height:'100%',justifyContent:'auto'}]}>
+                //     </ImageBackground>
+                // </View>
+                <ImageBackground source={require('../images/backgroundLogin.jpg')} style={[styles.container,{width:'100%',height:'100%',justifyContent:'auto'}]}>
+                    <View style={styles.logoLogin}>
+                        <Image source={require('../images/logoLogin.png')} style={styles.logoLogin}></Image>
+                    </View>
+                    
+                        {viewLogin()}
+                
+                </ImageBackground>
+        )
+    }
     return (
         <View style={{width:'100%',height:'100%'}}>
-        {isLoading?
-        <View style={{width:'100%',height:'100%', alignItems:'center', backgroundColor:'#999999', position:'relative', opacity:'0.7'}}>
-            <ImageBackground source={require('../images/backgroundLogin.jpg')} style={[styles.container,{width:'100%',height:'100%',justifyContent:'auto'}]}>
-            </ImageBackground>
-        </View>
-        :
-        <ImageBackground source={require('../images/backgroundLogin.jpg')} style={[styles.container,{width:'100%',height:'100%',justifyContent:'auto'}]}>
-            <View style={styles.logoLogin}>
-                <Image source={require('../images/logoLogin.png')} style={styles.logoLogin}></Image>
-            </View>
-            
-                {viewLogin()}
-        
-        </ImageBackground>
-        }
+            {setView()}
         </View>
     );
 }

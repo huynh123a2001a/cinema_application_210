@@ -1,10 +1,12 @@
 import {React} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import IndexView from './IndexScreen';
+import IndexView from './NewsScreen';
 import NewsView from './NewsScreen';
 import FilmsView from './FlimsScreen';
-import handleApp from '../Handle/setHandleApp.json'
+import FeedbackView from './FeedbackScreen';
+import { ImageBackground } from 'react-native';
+import handleApp from '../Handle/setHandleApp.json';
 const Tab = createBottomTabNavigator();
 export default function TabBottomView()
 {
@@ -34,8 +36,8 @@ export default function TabBottomView()
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-            } else if (route.name === 'Tin tức' || route.name === 'News') {
-              iconName = focused ? 'newspaper-outline' : 'newspaper';
+            } else if (route.name === 'Góp ý' || route.name === 'Feedback') {
+              iconName = focused ? 'mail-outline' : 'mail';
             }
             else if (route.name === 'Đặt vé' || route.name === 'Booking') {
               iconName = focused ? 'barcode' : 'barcode-outline';
@@ -47,11 +49,14 @@ export default function TabBottomView()
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
           headerShown: false,
+          tabBarActiveTintColor:'blue',
+          tabBarBadgeStyle:{color:'red'},
+           tabBarBackground: () => (<ImageBackground style={{backgroundColor:'#99FFFF',bottom:0.5, borderTopWidth:1,width:'100%', height:"100%", maxHeight:'100%',maxWidth:'100%'}} source={require('../images/ImgTabBottom.png')}></ImageBackground>),
         })}
       >
         <Tab.Screen name={handleApp.isLanguage==false?"Đặt vé":"Booking"}component={FilmsView} />
-        <Tab.Screen name={handleApp.isLanguage==false?"Sự kiện":"Events"} component={IndexView} />
-        <Tab.Screen name={handleApp.isLanguage==false?"Tin tức":"News"} component={NewsView} />
+        <Tab.Screen name={handleApp.isLanguage==false?"Sự kiện":"Events"} component={NewsView} />
+        <Tab.Screen name={handleApp.isLanguage==false?"Góp ý":"Feedback"} component={FeedbackView} />
       </Tab.Navigator>
     );
 }

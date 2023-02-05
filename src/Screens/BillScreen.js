@@ -1,12 +1,37 @@
-import { Modal, Alert, Text, View,TouchableOpacity, ScrollView,Pressable} from 'react-native';
-import {React} from 'react-native';
+import {TextInput ,Modal, Alert, Text, View,TouchableOpacity, ScrollView,Pressable} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../Css/pageCss';
 import handleApp from '../Handle/setHandleApp.json';
-import {useState} from 'react';
-import PaypalView from './Paypal.js'
+import user from '../Handle/setLoginUser.json';
+import React,{ useState,useEffect } from 'react';
+import PaypalView from './Paypal.js';
+import { Ionicons } from '@expo/vector-icons';
+import localhost from '../Route/configIP';
+import moment from 'moment';
+import customDateTime from '../Handle/customDateTime';
 export default function BillView({navigation,route}){
     try {
+    const [exchangeRate, setExchangeRate] = useState();
+    const [exchangeRateUSD, setUSDExchangeRate] = useState();
+    const [isLoading, setLoading] = useState(true);
+    const [voucher, setVoucher] = useState(" ");
+    const [discountVoucher, setDiscountVoucher] = useState(0);
+    const getExchangeRate = async () => {
+        try {
+        const response = await fetch(localhost()+"/exchangerates");
+        const json = await response.json();
+        json.filter(item=> {if(item.type=="USD");
+        return setUSDExchangeRate(item.exchangeRate)})
+        setExchangeRate(json);
+        } catch (error) {
+        console.error(error);
+        } finally {
+        setLoading(false);
+        }
+     }
+    useEffect(() => {
+        getExchangeRate();
+    }, []);
     const billData = route.params;
     const [payment, setPayment] = useState(null);
     const PaymentAlert = () =>
@@ -39,6 +64,76 @@ export default function BillView({navigation,route}){
         billData.foods.map(item=>item.foodPrice?total+=item.foodPrice*item.quantity:total+=item.comboPrice*item.quantity)
         return total;
     }
+    const messageArlert = (value) =>
+    {
+        Alert.alert(
+        "Thông báo",
+        value
+        )
+    }
+    function closeVoucher()
+    {
+        setDiscountVoucher(0);
+        setVoucher("");
+        billData.voucher="";
+        billData.discountVoucher =0;
+    }
+    function getVoucher()
+    {
+        try{
+            try{
+                if(voucher.trim()=="")
+                {
+                    setVoucher("");
+                    return handleApp.isLanguage==false?messageArlert("Vui lòng không để trống."):messageArlert("Please do not leave it blank.");
+                }
+            }
+            catch{
+                setVoucher("");
+                return handleApp.isLanguage==false?messageArlert("Vui lòng không để trống."):messageArlert("Please do not leave it blank.");
+            }
+            fetch(localhost()+"/vouchers", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    code:voucher.toUpperCase(),
+                    userID: user.idUser
+                })
+                }).then((response) => response.json())
+                .then((responseData) => {
+                    if(JSON.stringify(responseData)=='NOT FOUND USER')
+                    {
+                        setVoucher("");
+                        return messageArlert(handleApp.isLanguage==false?"Phiên đăng nhập đã hết hạn":"Login session has expired");
+                    }
+                    if(responseData=="EXPIRYDATE")
+                    {
+                        return messageArlert(handleApp.isLanguage==false?"Mã giảm giá đã hết hạn":"Expired discount code");
+                    }
+                    if(responseData=="AMOUNTZERO")
+                    {
+                        return messageArlert(handleApp.isLanguage==false?"Mã giảm giá đã lượt sử dụng":"Discount code has been used");
+                    }
+                    if(JSON.stringify(responseData)=='false')
+                    {
+                        setVoucher("");
+                        return messageArlert(handleApp.isLanguage==false?"Mã giảm giá này không tồn tại hoặc không đủ điều kiện sử dụng":"This discount code does not exist or is not eligible for use");
+                    }
+                    responseData.filter(voucher =>  billData.discountVoucher=voucher.discount)
+                    setDiscountVoucher(billData.discountVoucher);
+                    setVoucher(voucher.trim());
+                    billData.voucher=voucher.toUpperCase();
+                })
+                .then()
+        }
+        catch(e)
+        {
+            console.log(e)
+        }
+    }
     const [modalVisible, setModalVisible] = useState(false);
     console.disableYellowBox = true;
     function popupBill()
@@ -70,27 +165,51 @@ export default function BillView({navigation,route}){
                                 </View>
                                 <Text style={{marginTop:'2%'}}>- {handleApp.isLanguage==false?"Số ghế:":"Chair number:"} {" "+billData.chairs}.</Text>
                                 <Text style={{marginTop:'2%'}}>- {handleApp.isLanguage==false?"Tổng số ghế:":"Chairs total"} {billData.chairs.length}</Text>
-                                <Text style={{marginTop:'2%'}}>- {handleApp.isLanguage==false?"Đơn giá ghế":"Unit price per seat:"} {billData.priceTicket}</Text>
-                                <Text style={{marginTop:'2%', fontWeight:'bold'}}>- {handleApp.isLanguage==false?"Tổng giá đặt chỗ":"Total price for seat reservation"}: {billData.chairs.length*billData.priceTicket}</Text>
+                                <Text style={{marginTop:'2%'}}>- {handleApp.isLanguage==false?"Đơn giá ghế":"Unit price per seat:"} {payment=="Paypal"?(billData.priceTicket/exchangeRateUSD).toFixed(2)+"$":billData.priceTicket}</Text>
+                                <Text style={{marginTop:'2%', fontWeight:'bold'}}>- {handleApp.isLanguage==false?"Tổng giá đặt chỗ":"Total price for seat reservation"}: {payment=="Paypal"?(((billData.chairs.length*billData.priceTicket)/exchangeRateUSD).toFixed(2))+"$":billData.chairs.length*billData.priceTicket}</Text>
                                 <View style={{alignItems:'center'}}>
                                     <Text style={styles.titleContentText}>{handleApp.isLanguage==false?"Phụ phẩm kèm":"By-products"}</Text>
                                 </View>
                                 <Text style={{marginTop:'2%', fontWeight:'bold'}}>* {handleApp.isLanguage==false?"Phụ phẩm":"By-products"}</Text>
                                 {billData.foods.map(index => index.foodID?
-                                    <View style={{width:'100%'}}>
+                                    <View style={{width:'100%'}} key ={index.foodID}>
                                         <Text style={{ marginTop:'3%'}}>- {index.foodName}</Text>
-                                        <Text>+ {handleApp.isLanguage==false?"Số lượng:":"Quantity"} {index.quantity}, {handleApp.isLanguage==false?"Đơn giá":"Unit price"}: {index.foodPrice}, <Text style={{fontWeight:'bold'}}> {handleApp.isLanguage==false?"Tổng":"Total"}</Text></Text>
+                                        <Text>+ {handleApp.isLanguage==false?"Số lượng:":"Quantity"} {index.quantity}, {handleApp.isLanguage==false?"Đơn giá":"Unit price"}: {payment=="Paypal"?(index.foodPrice/exchangeRateUSD).toFixed(2)+"$":index.foodPrice}, <Text style={{fontWeight:'bold'}}> {handleApp.isLanguage==false?"Tổng":"Total"}:{payment=="Paypal"?((index.foodPrice*index.quantity)/exchangeRateUSD).toFixed(2)+"$":index.foodPrice*index.quantity}</Text></Text>
                                     </View>:
-                                    <View style={{width:'100%'}}>
+                                    <View style={{width:'100%'}} key={index.comboID}>
                                         <Text style={{ marginTop:'3%'}}>- {index.comboName}</Text>
-                                        <Text>+ {handleApp.isLanguage==false?"Số lượng":"Quantity"}: {index.quantity}, {handleApp.isLanguage==false?"Đơn giá":"Unit price"}: {index.comboPrice}, <Text style={{fontWeight:'bold'}}> {handleApp.isLanguage==false?"Tổng":"Total"}:{index.comboPrice*index.quantity}</Text></Text>
+                                        <Text>+ {handleApp.isLanguage==false?"Số lượng":"Quantity"}: {index.quantity}, {handleApp.isLanguage==false?"Đơn giá":"Unit price"}: {payment=="Paypal"?(index.comboPrice/exchangeRateUSD).toFixed(2)+"$":index.comboPrice}, <Text style={{fontWeight:'bold'}}> {handleApp.isLanguage==false?"Tổng":"Total"}:{payment=="Paypal"?((index.comboPrice*index.quantity)/exchangeRateUSD).toFixed(2)+"$":index.comboPrice*index.quantity}</Text></Text>
                                     </View>
                                 )}
-                                <Text style={{marginTop:'2%', fontWeight:'bold'}}>- {handleApp.isLanguage==false?"Tổng phụ phẩm:":"By-products total:"} {billFoods()}</Text>
-                                <View style={{alignItems:'center', marginTop:'3%',}}>
-                                    <Text style={[styles.titleContentText,{fontSize:20}]}>{handleApp.isLanguage==false?"Tổng hoá đơn":"Bill total"}: {total()}</Text>
+                                <Text style={{marginTop:'2%', fontWeight:'bold'}}>- {handleApp.isLanguage==false?"Tổng phụ phẩm:":"By-products total:"} {payment=="Paypal"?(billFoods()/exchangeRateUSD).toFixed(2)+"$":billFoods()}</Text>
+                                {discountVoucher!=0?<Text style={{marginTop:'2%', fontWeight:'bold'}}>- {handleApp.isLanguage==false?"Mã giảm giá:":"Voucher:"} {payment=="Paypal"?(discountVoucher/exchangeRateUSD).toFixed(2)+"$":discountVoucher}</Text>:""}
+                                <View style={{height:30,marginTop:'3%', flexDirection:'row',}}>
+                                    <View style={{height:'100%',alignItems:'center'}}>
+                                        <Text style={[styles.titleContentText,{fontSize:20}]}>{handleApp.isLanguage==false?"Mã giảm giá":"Voucher"} </Text>
+                                    </View>
+                                    { discountVoucher == 0?
+                                    <View style={{width:'50%', height:'100%', backgroundColor:'white', borderWidth:1, opacity:0.8, justifyContent:'center'}}>
+                                            <TextInput style={{marginLeft:'3%', color:'red', fontSize:18, fontWeight:'bold'}} onChangeText={setVoucher}>{voucher.toUpperCase()}</TextInput>
+                                    </View>
+                                    :
+                                    <View style={{width:'50%', height:'100%', opacity:0.8, justifyContent:'center'}}>
+                                            <Text style={{marginLeft:'3%', color:'red', fontSize:18, fontWeight:'bold'}} onChangeText={setVoucher}>{voucher.toUpperCase()}</Text>
+                                    </View>
+                                    }
+                                    {
+                                    discountVoucher==0?
+                                    <TouchableOpacity style={{height:'100%',alignItems:'center'}} onPress={()=>getVoucher()}>
+                                        <Ionicons name={"checkbox-outline"} size={32} color={"black"} />
+                                    </TouchableOpacity>
+                                    :
+                                    <TouchableOpacity style={{height:'100%', borderLeftWidth:0.5,alignItems:'center'}} onPress={()=>closeVoucher()}>
+                                        <Ionicons name={"close-circle-outline"} size={32} color={"black"} />
+                                    </TouchableOpacity>
+                                    }
                                 </View>
-                               
+                                <View style={{alignItems:'center', marginTop:'3%',}}>
+                                    <Text style={[styles.titleContentText,{fontSize:20}]}>{handleApp.isLanguage==false?"Tổng hoá đơn":"Bill total"}: {payment=="Paypal"?((total()/exchangeRateUSD).toFixed(2)-((discountVoucher/exchangeRateUSD).toFixed(2))).toFixed(2)+"$":(total()-discountVoucher)}</Text>
+                                </View>
                             </View>
                         </ScrollView>
                         <View style={{width:'100%', height:'10%', alignItems:'center', borderTopWidth:0.5}}>
@@ -136,7 +255,7 @@ export default function BillView({navigation,route}){
                 <Text style={[styles.titleContentText]}> 
                     {handleApp.isLanguage==false?"Thời gian":"Time"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
-                        : {billData.showDate}|{billData.showTime}
+                        : {customDateTime(billData.showDate).date}|{billData.showTime}
                     </Text>
                 </Text>
             </View>
@@ -152,13 +271,13 @@ export default function BillView({navigation,route}){
                 <Text style={[styles.titleContentText]}> 
                 {handleApp.isLanguage==false?"Tổng phụ phẩm:":"By-products total:"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
-                        {billData.foods.length>0?" "+billFoods():handleApp.isLanguage==false?"Không có mua thêm":"No additional purchases"}.
+                        {billData.foods.length>0?payment=="Paypal"?" "+(billFoods()/exchangeRateUSD).toFixed(2)+"$":" "+billFoods():handleApp.isLanguage==false?"Không có mua thêm":"No additional purchases"}.
                     </Text>
                 </Text>
             </View>
             <View style={{marginTop:"5%" ,justifyContent:'center', marginLeft:'5%', alignItems:'center'}}>
                 <Text style={[styles.titleContentText]}> 
-                {handleApp.isLanguage==false?"Tổng":"Total:"} {total()}
+                {handleApp.isLanguage==false?"Tổng:":"Total:"} {payment=="Paypal"?((total()/exchangeRateUSD)-((discountVoucher/exchangeRateUSD))).toFixed(2)+"$":(total()-discountVoucher)}
                 </Text>
         </View>
     </View>
@@ -205,7 +324,7 @@ export default function BillView({navigation,route}){
     return(
     payment=="Paypal"?
         <View style={{borderWidth:1,maxWidth:"70%", maxHeight:"10%", backgroundColor:"#3366FF", width:'100%', height:'100%',borderRadius:30 }}>
-            <PaypalView/>
+            {PaypalView(total()-discountVoucher,billData,navigation)}
         </View>
     :
         payment == "Momo"?

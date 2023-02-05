@@ -33,10 +33,16 @@ export default function TicketsView({navigation, route})
   }
   const messageArlert = (value) =>
     {
+        handleApp.isLanguage==false?
         Alert.alert(
         "Thông báo",
         value
         )
+        :
+        Alert.alert(
+          "Notify",
+          value
+          )
     }
   useEffect(() => {
     getChairs();
@@ -104,7 +110,8 @@ export default function TicketsView({navigation, route})
     try{
     ticketsData.chairs=[];
     chairsData.filter(item => item.status==3?ticketsData.chairs.push(item.chairName):'')
-    console.log(ticketsData)
+    if(ticketsData.chairs.length<1)
+      return messageArlert(handleApp.isLanguage==false?"Vui lòng chọn ít nhất một ghế.":"Please choose at least one chair.")
     handleApp.isLanguage==false?
     navigation.navigate("Phụ phẩm",ticketsData)
     :

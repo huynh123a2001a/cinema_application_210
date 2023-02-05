@@ -14,7 +14,7 @@ router.get('/',(req, res)=>
 
 router.post('/',(req, res)=>
 {   
-    var sql = "SELECT * FROM chairs where roomID="+req.body.roomID+"";
+    var sql = "SELECT * FROM chairs where roomID="+req.body.roomID;
     connection.query(sql, function(err, results) {
       if (err) throw err;
       results!=""?

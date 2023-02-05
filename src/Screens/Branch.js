@@ -24,7 +24,6 @@ export default function BranchView({navigation, route})
      useEffect(() => {
         getBranchs();
      }, []);
-    
     function onShowTimeScreen(id,name,addressID, addressName)
     {   
         routeData.cinemaID=id;
@@ -58,7 +57,9 @@ export default function BranchView({navigation, route})
                 <Image source={require('../images/iconLoading.gif')} style={{ maxWidth:'20%',maxHeight:'20%', display:'block'}}></Image>
                 <Text style={{marginTop:'5%', fontSize:20,fontWeight:'bold'}}> Loading...</Text>
                 </View>
-                : showBranch(branchsData)}
+                : branchsData.length>0?showBranch(branchsData):<View style={{height:'100%', width:'100%', alignItems:'center',justifyContent:'center', marginTop:"40%"}}>
+                <Text style={{fontWeight:'bold', fontSize:20}}>{handleApp.isLanguage==false?"Hiện tại phim chưa có lịch chiếu":"Not schedule now for film"}</Text>
+                </View>}
             </ScrollView>
         </LinearGradient>
     );
