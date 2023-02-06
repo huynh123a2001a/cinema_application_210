@@ -21,7 +21,6 @@ router.post('/', (req, res) => {
     
     sql = "INSERT INTO bills (`billName`,`billName1`,`paymentID`,`createDate`,`status`,`billTotal`,`userID`) VALUES ('Hoá đơn thanh toán','Payment bill',4,'" + dateTime + "',1," + req.body.total + ",'" + req.body.userID + "')";
     if (req.body.listItem.discountVoucher && req.body.listItem.discountVoucher != 0) {
-        req.body.total = req.body.total - req.body.listItem.discountVoucher;
         sql = "UPDATE vouchers SET `amount` = `amount`-1 WHERE `voucherID` = '" + req.body.listItem.voucher + "'";
         connection.query(sql)
         sql = "INSERT INTO bills (`billName`,`billName1`,`paymentID`,`createDate`,`status`,`billTotal`,`userID`,`voucherID`) VALUES ('Hoá đơn thanh toán','Payment bill',4,'" + dateTime + "',1," + req.body.total + ",'" + req.body.userID + "','" + req.body.listItem.voucher.trim() + "')";

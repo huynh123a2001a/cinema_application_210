@@ -11,7 +11,7 @@ export default function ShowTimesView({ navigation, route }) {
     const [isLoading, setLoading] = useState(true);
     const [showTimesData, setShowTimesData] = useState([]);
     const getTimes = ([]);
-    const [row, setRow] = useState(3);
+   
     const getShowTimes = async () => {
         try {
             fetch(localhost() + "/showtimes", {
@@ -38,6 +38,7 @@ export default function ShowTimesView({ navigation, route }) {
     useEffect(() => {
         getShowTimes();
     }, []);
+    console.log(showTimesData)
     function setTime(value) {
         for (let j = 0; j < getTimes.length; j++) {
             if (value.slice(0, value.indexOf("T")) == getTimes[j])
@@ -62,7 +63,7 @@ export default function ShowTimesView({ navigation, route }) {
                         </LinearGradient>
                         <View style={styles.showTimes}>
                             <View style={styles.showTimesTitle}>
-                                <Text style={styles.textShowTimesTitle}> {customDateTime(item).date}</Text>
+                                <Text style={styles.textShowTimesTitle}> {(customDateTime(item).date)}</Text>
                             </View>
                             <View style={styles.showTimesContent}>
                                 <ScrollView>
@@ -89,13 +90,12 @@ export default function ShowTimesView({ navigation, route }) {
             :
             navigation.navigate("Tickets", routeData)
     }
-
     const getColumnShowTimes = (number, id, roomID, roomName, priceTicket) => {
         return (
             <TouchableOpacity key={id} onPress={() => getChair(id, number, roomID, roomName, priceTicket)} >
                 <View style={styles.buttonShowTimes} key={id}>
                     <Text style={styles.textContentShowTimes}>
-                        {number.slice(number.indexOf("T") + 1, number.indexOf("Z") - 7)}
+                        {customDateTime(number).time}
                     </Text>
                 </View>
             </TouchableOpacity>

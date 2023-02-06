@@ -57,7 +57,7 @@ export default styles = StyleSheet.create({
     heading: {
         fontSize: 30,
         fontWeight: 'bold',
-        marginLeft: '40%',
+        marginLeft: '30%',
         marginTop: '15%',
         marginBottom: '30%',
         color:'black',

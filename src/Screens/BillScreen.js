@@ -255,7 +255,7 @@ export default function BillView({navigation,route}){
                 <Text style={[styles.titleContentText]}> 
                     {handleApp.isLanguage==false?"Thời gian":"Time"}
                     <Text style={{ fontSize:14, fontWeight:'normal'}}>
-                        : {customDateTime(billData.showDate).date}|{billData.showTime}
+                        : {customDateTime(billData.showDate).date}|{customDateTime(billData.showTime).onlyTime}
                     </Text>
                 </Text>
             </View>

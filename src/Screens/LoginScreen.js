@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../Css/pageCss';
 import localhost from '../Route/configIP';
 import loginUser from '../Handle/setLoginUser.json';
+import { Button } from 'react-native-paper';
 export default function LoginView({navigation})
 {   
     const [userName, setUsername] = useState('');
@@ -141,7 +142,7 @@ export default function LoginView({navigation})
             <LinearGradient style={styles.card} colors={['#FFCC66', '#FFFFCC', '#FFCC66']}
             start={{ x: 0.2, y: 0 }}
             end={{x: 1, y:1}}>
-            <Text style={styles.heading}>{isLogin ? 'Login' : 'Signup'}</Text>
+            <Text style={styles.heading}>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</Text>
             <View style={styles.form}>
                 <View style={styles.inputs}>
                         <View style={{width:'95%', marginLeft:"15%", height:140}}>
@@ -215,7 +216,7 @@ export default function LoginView({navigation})
                     end={{x: 0.1, y:0.3}}
                     style={styles.button}>
                     <TouchableOpacity style={styles.buttonAlt} onPress={()=>(setIsLogin(!isLogin),setMessage(''))}>
-                        <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
+                        <Text style={styles.buttonAltText}>{isLogin ? 'Đăng ký' : 'Đăng nhập'}</Text>
                     </TouchableOpacity>
                     </LinearGradient>
                 </View>    
@@ -236,7 +237,11 @@ export default function LoginView({navigation})
                     </View>
                     
                         {viewLogin()}
-                
+                    <Button style={{ borderRadius:30 ,backgroundColor:'#FFFFFF', width:"70%", height:'6%', marginTop:'10%', alignItems:'center', justifyContent:'center' }} onPress>
+                        <Text style={{color:"#000000", fontSize:16, fontWeight:'bold'}}>
+                            Go test view
+                        </Text>
+                    </Button>
                 </ImageBackground>
         )
     }

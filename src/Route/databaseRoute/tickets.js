@@ -7,7 +7,7 @@ const moment = require('moment');
 router.post('/',(req, res)=>
 {
     var dateTime = moment()
-    .utcOffset('+05:30')
+    .utcOffset('+06:30')
     .format('YYYY-MM-DD hh:mm:ss');
     var sql;
     console.log(10);

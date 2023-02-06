@@ -286,7 +286,7 @@ export default function BillHistoryView({ navigation }) {
                         <Text style={{ fontWeight: 'bold' }}>{handleApp.isLanguage == false ? "Tổng giá trị" : "Total"}: <Text style={styles.contentTextCard}>{item.billTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</Text></Text>
                     </View>
                     <View style={{ flex: 1, marginLeft: '5%' }}>
-                        <Text style={{ fontWeight: 'bold' }}>{handleApp.isLanguage == false ? "Ngày thanh toán" : "Payment date"}: <Text style={styles.contentTextCard}>{customDateTime(item.createDate).datetime}</Text></Text>
+                        <Text style={{ fontWeight: 'bold' }}>{handleApp.isLanguage == false ? "Ngày thanh toán" : "Payment date"}: <Text style={styles.contentTextCard}>{customDateTime(item.createDate).datetimeNormal}</Text></Text>
                     </View>
                     <View style={{ flex: 2, marginLeft: '5%', marginRight: '5%' }}>
                         <ScrollView>

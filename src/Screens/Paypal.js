@@ -26,6 +26,7 @@ function PaypalView(total, list_item, navigation) {
       alert('PAYMENT FAILED. PLEASE TRY AGAIN.');
     }
   }
+  console.log(total)
   function setBillTickets() {
     list_item == null ?
       alert('Có lỗi xảy ra, chúng tôi sẽ kiểm tra ngay lập tức, vui lòng đợi trong giây lát')
