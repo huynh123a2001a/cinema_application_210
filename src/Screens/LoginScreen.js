@@ -87,6 +87,11 @@ export default function LoginView({navigation})
         }
     
     }
+
+    function onTest()
+    {
+        navigation.navigate ('TEST VIEW');
+    }
     function onIndex(user)
     {
         navigation.navigate ('DrawerTab',user);
@@ -131,10 +136,6 @@ export default function LoginView({navigation})
         {
             console.log(e);
         }
-    }
-    function onTestView()
-    {
-        return navigation.navigate('TEST VIEW')
     }
     const viewLogin = () =>
     {
@@ -237,8 +238,8 @@ export default function LoginView({navigation})
                     </View>
                     
                         {viewLogin()}
-                    <Button style={{ borderRadius:30 ,backgroundColor:'#FFFFFF', width:"70%", height:'6%', marginTop:'10%', alignItems:'center', justifyContent:'center' }} onPress>
-                        <Text style={{color:"#000000", fontSize:16, fontWeight:'bold'}}>
+                    <Button style={{ borderRadius:30 ,backgroundColor:'#FFFFFF', width:"70%", height:'6%', marginTop:'10%', alignItems:'center', justifyContent:'center' }} onPress={onTest}>
+                        <Text style={{color:"#000000", fontSize:16, fontWeight:'bold', width:"100%", height:"100%"}}>
                             Go test view
                         </Text>
                     </Button>

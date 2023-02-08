@@ -114,60 +114,64 @@ export default function FeedbackView({ navigation }) {
                 shadowOpacity: 1,
                 shadowRadius: 7,
             }}>
-                <ScrollView>
-                    <View style={{ width: '100%', height: 150, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontFamily: "Chalkduster", fontWeight: 'bold', fontSize: 35 }}>
-                            {handleApp.isLanguage == false ? "Thư góp ý" : "Feedback mail"}
-                        </Text>
+                <View style={{width:'100%', height:'100%'}}>
+                    <View style={{flex:4}}>
+                        <View style={{ width: '100%', height: 150, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={{ fontFamily: "Chalkduster", fontWeight: 'bold', fontSize: 35 }}>
+                                {handleApp.isLanguage == false ? "Thư góp ý" : "Feedback mail"}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            
+                        </View>
+                        <View style={{ width: '94%', height: 35, marginLeft: '3%', flexDirection: 'row', alignItems: 'center' }}>
+                            <TextInput style={{
+                                width: '100%',
+                                flex: 1,
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'black',
+                                paddingTop: 10,
+                                fontSize: 16,
+                                minHeight: 40,
+                                marginLeft: '3%'
+                            }} placeholder={"Email"} autoCapitalize="none" onChangeText={(text) => validate(text)} value={representativeMail}></TextInput>
+                            <TextInput style={{
+                                width: '100%',
+                                flex: 1,
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'black',
+                                paddingTop: 10,
+                                fontSize: 16,
+                                minHeight: 40,
+                                marginLeft: '3%'
+                            }} placeholder={"Phone"} autoCapitalize="none" onChangeText={setPhone}></TextInput>
+                        </View>
+                        <View>
+                            <Text style={{ marginLeft: "5%", marginTop: '2%', fontSize: 8, fontWeight: 'bold', color: 'red' }}>{flagMail}</Text>
+                        </View>
+                        <View style={{ marginBottom: '5%', width: '94%', maxWidth: '94%', height: 150, marginLeft: '3%', flexDirection: 'row', alignItems: 'center', marginTop: '5%' }}>
+                            <TextInput style={{
+                                maxWidth: '94%',
+                                height: 135,
+                                flex: 1,
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'black',
+                                paddingTop: 10,
+                                fontSize: 16,
+                                minHeight: 40,
+                                marginLeft: '3%'
+                            }} placeholder={handleApp.isLanguage == false ? "Nội dung góp ý" : "Feedback content"} autoCapitalize="none" multiline onChangeText={setMessage}></TextInput>
+                        </View>
+                        {handleApp.isLanguage == false ? getFormInput("Mong muốn cải thiện", setImprove) : getFormInput("Desire to improve", setImprove)}
                     </View>
-                    <View style={{ flexDirection: 'row' }}></View>
-                    <View style={{ width: '94%', height: 35, marginLeft: '3%', flexDirection: 'row', alignItems: 'center' }}>
-                        <TextInput style={{
-                            width: '100%',
-                            flex: 1,
-                            borderBottomWidth: 1,
-                            borderBottomColor: 'black',
-                            paddingTop: 10,
-                            fontSize: 16,
-                            minHeight: 40,
-                            marginLeft: '3%'
-                        }} placeholder={"Email"} autoCapitalize="none" onChangeText={(text) => validate(text)} value={representativeMail}></TextInput>
-                        <TextInput style={{
-                            width: '100%',
-                            flex: 1,
-                            borderBottomWidth: 1,
-                            borderBottomColor: 'black',
-                            paddingTop: 10,
-                            fontSize: 16,
-                            minHeight: 40,
-                            marginLeft: '3%'
-                        }} placeholder={"Phone"} autoCapitalize="none" onChangeText={setPhone}></TextInput>
+                    <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                            <TouchableOpacity style={{ width: '25%', height: '30%', backgroundColor: '#DDDDDD', borderWidth: 1, borderRadius: 20, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }} onPress={sendFeedBacks}>
+                                <Text>~</Text>
+                                <Ionicons name={"send-outline"} size={22} color={"red"} />
+                                <Text style={{ marginLeft: '10%', fontWeight: 'bold' }}>{handleApp.isLanguage == false ? "Gửi" : "Send"}</Text>
+                            </TouchableOpacity>
                     </View>
-                    <View>
-                        <Text style={{ marginLeft: "5%", marginTop: '2%', fontSize: 8, fontWeight: 'bold', color: 'red' }}>{flagMail}</Text>
-                    </View>
-                    <View style={{ marginBottom: '5%', width: '94%', maxWidth: '94%', height: 150, marginLeft: '3%', flexDirection: 'row', alignItems: 'center', marginTop: '5%' }}>
-                        <TextInput style={{
-                            maxWidth: '94%',
-                            height: 135,
-                            flex: 1,
-                            borderBottomWidth: 1,
-                            borderBottomColor: 'black',
-                            paddingTop: 10,
-                            fontSize: 16,
-                            minHeight: 40,
-                            marginLeft: '3%'
-                        }} placeholder={handleApp.isLanguage == false ? "Nội dung góp ý" : "Feedback content"} autoCapitalize="none" multiline onChangeText={setMessage}></TextInput>
-                    </View>
-                    {handleApp.isLanguage == false ? getFormInput("Mong muốn cải thiện", setImprove) : getFormInput("Desire to improve", setImprove)}
-                    <View style={{ width: '100%', height: 50, marginTop: '10%', alignItems: 'center', justifyContent: 'center' }}>
-                        <TouchableOpacity style={{ width: '25%', height: '80%', backgroundColor: '#DDDDDD', borderWidth: 1, borderRadius: 20, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }} onPress={sendFeedBacks}>
-                            <Text>~</Text>
-                            <Ionicons name={"send-outline"} size={22} color={"red"} />
-                            <Text style={{ marginLeft: '10%', fontWeight: 'bold' }}>{handleApp.isLanguage == false ? "Gửi" : "Send"}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
+                </View>
             </View>
         </LinearGradient>
     );
